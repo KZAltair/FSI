@@ -1,0 +1,3 @@
+[submodule "FSICORE/3rdparty/spdlog"]
+	path = FSICORE/3rdparty/spdlog
+	url = https://github.com/gabime/spdlog.git
