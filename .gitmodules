@@ -7,3 +7,8 @@
 [submodule "FSICORE/3rdparty/imgui"]
 	path = FSICORE/3rdparty/imgui
 	url = https://github.com/ocornut/imgui.git
+	branch = docking
+[submodule "imgui"]
+	path = imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking
