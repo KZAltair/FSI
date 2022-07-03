@@ -1,5 +1,6 @@
 workspace "FSI"
 	architecture "x64"
+	startproject "VIEWER"
 
 	configurations
 	{

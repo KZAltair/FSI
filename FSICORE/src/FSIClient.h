@@ -8,6 +8,12 @@
 #include "Core/Layer.h"
 #include "Core/Log.h"
 
+//----Custom Input------------------//
+#include "Core/Input.h"
+#include "Core/KeyCodes.h"
+#include "Core/MouseButtonCodes.h"
+//---------------------------------//
+
 //----GUI Framework----------------//
 #include "Core/ImGui/ImGuiLayer.h"
 //---------------------------------//

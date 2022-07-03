@@ -6,6 +6,9 @@
 
 #include <glad/glad.h>
 
+#include "Input.h"
+
+
 namespace fsicore
 {
 	Application* Application::s_Instance = nullptr;

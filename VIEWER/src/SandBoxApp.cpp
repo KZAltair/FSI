@@ -9,12 +9,19 @@ public:
 
 	void OnUpdate() override
 	{
-		FSI_INFO("ExampleLayer::Update");
+		if (fsicore::Input::IsKeyPressed(FSI_KEY_TAB))
+			FSI_TRACE("Tab key is pressed (poll)!");
 	}
 
 	void OnEvent(fsicore::Event& event) override
 	{
-		FSI_TRACE("{0}", event);
+		if (event.GetEventType() == fsicore::EventType::KeyPressed)
+		{
+			fsicore::KeyPressedEvent& e = (fsicore::KeyPressedEvent&)event;
+			if (e.GetKeyCode() == FSI_KEY_TAB)
+				FSI_TRACE("Tab key is pressed (event)!");
+			FSI_TRACE("{0}", (char)e.GetKeyCode());
+		}
 	}
 
 };
