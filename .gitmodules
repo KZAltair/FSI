@@ -1,3 +1,6 @@
 [submodule "FSICORE/3rdparty/spdlog"]
 	path = FSICORE/3rdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "FSICORE/3rdparty/GLFW"]
+	path = FSICORE/3rdparty/GLFW
+	url = https://github.com/TheCherno/glfw.git
