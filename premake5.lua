@@ -10,6 +10,13 @@ workspace "FSI"
 
 outputdir = "%{cfg.buildcfg}_%{cfg.system}_%{cfg.architecture}"
 
+-- Include directories relative to root folder (solution directory)
+IncludeDir = {}
+IncludeDir["GLFW"] = "FSICORE/3rdparty/GLFW/include"
+
+-- This is for including another premake for GLFW lua script
+include "FSICORE/3rdparty/GLFW"
+
 project "FSICORE"
 	location "FSICORE"
 	kind "SharedLib"
@@ -30,19 +37,25 @@ project "FSICORE"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/3rdparty/spdlog/include"
+		"%{prj.name}/3rdparty/spdlog/include",
+		"%{IncludeDir.GLFW}"
 	}
 
-	filter "system:Windows"
+	links 
+	{ 
+		"GLFW",
+		"opengl32.lib"
+	}
+
+	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
+		staticruntime "off"
 		systemversion "latest"
 
 		defines
 		{
 			"FSI_PLATFORM_WINDOWS",
-			"FSI_BUILD_DLL",
-			"_WINDLL"
+			"FSI_BUILD_DLL"
 		}
 
 		postbuildcommands
@@ -90,7 +103,7 @@ project "VIEWER"
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "On"
-		systemversion "10.0.19041.0"
+		systemversion "latest"
 
 		defines
 		{
