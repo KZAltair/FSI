@@ -7,6 +7,8 @@
 #include "Core/Events/Event.h"
 #include "Core/Events/ApplicationEvent.h"
 
+#include "Core/ImGui/ImGuiLayer.h"
+
 namespace fsicore
 {
 	class FSI_API Application
@@ -25,6 +27,7 @@ namespace fsicore
 		bool OnWindowClose(WindowCloseEvent& e);
 	private:
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	private:

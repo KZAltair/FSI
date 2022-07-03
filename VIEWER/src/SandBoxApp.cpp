@@ -1,4 +1,7 @@
 #include <FSIClient.h>
+
+#include "imgui/imgui.h"
+
 class ExampleLayer : public fsicore::Layer
 {
 public:
@@ -11,6 +14,13 @@ public:
 	{
 		if (fsicore::Input::IsKeyPressed(FSI_KEY_TAB))
 			FSI_TRACE("Tab key is pressed (poll)!");
+	}
+
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Test");
+		ImGui::Text("Hello World");
+		ImGui::End();
 	}
 
 	void OnEvent(fsicore::Event& event) override
@@ -32,7 +42,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new fsicore::ImGuiLayer());
 	}
 	~Sandbox()
 	{

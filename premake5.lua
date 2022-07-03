@@ -107,7 +107,8 @@ project "VIEWER"
 	includedirs
 	{
 		"FSICORE/3rdparty/spdlog/include",
-		"FSICORE/src"
+		"FSICORE/src",
+		"FSICORE/3rdparty",
 	}
 
 	links
