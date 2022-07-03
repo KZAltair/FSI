@@ -13,9 +13,11 @@ outputdir = "%{cfg.buildcfg}_%{cfg.system}_%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "FSICORE/3rdparty/GLFW/include"
+IncludeDir["Glad"] = "FSICORE/3rdparty/Glad/include"
 
 -- This is for including another premake for GLFW lua script
 include "FSICORE/3rdparty/GLFW"
+include "FSICORE/3rdparty/Glad"
 
 project "FSICORE"
 	location "FSICORE"
@@ -38,12 +40,14 @@ project "FSICORE"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/3rdparty/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links 
 	{ 
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 
@@ -55,7 +59,8 @@ project "FSICORE"
 		defines
 		{
 			"FSI_PLATFORM_WINDOWS",
-			"FSI_BUILD_DLL"
+			"FSI_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands
@@ -65,14 +70,17 @@ project "FSICORE"
 
 	filter "configurations:Debug"
 		defines "FSI_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "FSI_RELEASE"
+		buildoptions "/MD"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "FSI_DIST"
+		buildoptions "/MD"
 		optimize "On"
 
 project "VIEWER"
@@ -113,12 +121,15 @@ project "VIEWER"
 
 	filter "configurations:Debug"
 		defines "FSI_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "FSI_RELEASE"
+		buildoptions "/MD"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "FSI_DIST"
+		buildoptions "/MD"
 		optimize "On"
