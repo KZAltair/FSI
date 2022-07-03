@@ -14,10 +14,12 @@ outputdir = "%{cfg.buildcfg}_%{cfg.system}_%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "FSICORE/3rdparty/GLFW/include"
 IncludeDir["Glad"] = "FSICORE/3rdparty/Glad/include"
+IncludeDir["ImGui"] = "FSICORE/3rdparty/imgui"
 
 -- This is for including another premake for GLFW lua script
 include "FSICORE/3rdparty/GLFW"
 include "FSICORE/3rdparty/Glad"
+include "FSICORE/3rdparty/imgui"
 
 project "FSICORE"
 	location "FSICORE"
@@ -41,14 +43,16 @@ project "FSICORE"
 		"%{prj.name}/src",
 		"%{prj.name}/3rdparty/spdlog/include",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}"
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	links 
 	{ 
 		"GLFW",
 		"Glad",
-		"opengl32.lib"
+		"opengl32.lib",
+		"IMGUI"
 	}
 
 	filter "system:windows"
