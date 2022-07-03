@@ -84,7 +84,6 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -94,7 +93,7 @@
       <ImportLibrary>..\bin\Debug_windows_x86_64\FSICORE\FSICORE.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.dll\ (xcopy /Q /E /Y /I ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.dll ..\bin\Debug_windows_x86_64\VIEWER &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.dll ..\bin\Debug_windows_x86_64\VIEWER &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.dll\ (xcopy /Q /E /Y /I ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Debug_windows_x86_64\VIEWER\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Debug_windows_x86_64\VIEWER\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -110,7 +109,6 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -121,7 +119,7 @@
       <ImportLibrary>..\bin\Release_windows_x86_64\FSICORE\FSICORE.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release_windows_x86_64\FSICORE\FSICORE.dll\ (xcopy /Q /E /Y /I ..\bin\Release_windows_x86_64\FSICORE\FSICORE.dll ..\bin\Release_windows_x86_64\VIEWER &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release_windows_x86_64\FSICORE\FSICORE.dll ..\bin\Release_windows_x86_64\VIEWER &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Release_windows_x86_64\FSICORE\FSICORE.dll\ (xcopy /Q /E /Y /I ..\bin\Release_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Release_windows_x86_64\VIEWER\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Release_windows_x86_64\VIEWER\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -137,7 +135,6 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -148,7 +145,7 @@
       <ImportLibrary>..\bin\Dist_windows_x86_64\FSICORE\FSICORE.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.dll\ (xcopy /Q /E /Y /I ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.dll ..\bin\Dist_windows_x86_64\VIEWER &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.dll ..\bin\Dist_windows_x86_64\VIEWER &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.dll\ (xcopy /Q /E /Y /I ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Dist_windows_x86_64\VIEWER\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Dist_windows_x86_64\VIEWER\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

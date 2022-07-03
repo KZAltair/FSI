@@ -25,6 +25,7 @@ project "FSICORE"
 	location "FSICORE"
 	kind "SharedLib"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") 
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -57,7 +58,6 @@ project "FSICORE"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "off"
 		systemversion "latest"
 
 		defines
@@ -69,28 +69,30 @@ project "FSICORE"
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/VIEWER")
+			--("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/VIEWER")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/VIEWER/\"")
 		}
 
 	filter "configurations:Debug"
 		defines "FSI_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "FSI_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "FSI_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 project "VIEWER"
 	location "VIEWER"
 	kind "ConsoleApp"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") 
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -114,7 +116,6 @@ project "VIEWER"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -125,15 +126,15 @@ project "VIEWER"
 
 	filter "configurations:Debug"
 		defines "FSI_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "FSI_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "FSI_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"

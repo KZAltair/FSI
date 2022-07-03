@@ -10,9 +10,13 @@
 	#error FSI Viewer only supports Windows for now!
 #endif
 
+#ifdef FSI_DEBUG
+#define FSI_ENABLE_ASSERTS
+#endif
+
 #ifdef FSI_ENABLE_ASSERTS
-#define HZ_ASSERT(x, ...) { if(!(x)) { FSI_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-#define HZ_CORE_ASSERT(x, ...) { if(!(x)) { FSI_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define FSI_ASSERT(x, ...) { if(!(x)) { FSI_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define FSI_CORE_ASSERT(x, ...) { if(!(x)) { FSI_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #else
 #define FSI_ASSERT(x, ...)
 #define FSI_CORE_ASSERT(x, ...)
