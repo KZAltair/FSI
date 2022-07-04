@@ -137,12 +137,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GuiInterface.cpp" />
     <ClCompile Include="src\SandBoxApp.cpp" />
+    <ClCompile Include="src\Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FSICORE\FSICORE.vcxproj">
       <Project>{707B17D7-DC5A-9672-E572-214951D1FCD3}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\GuiInterface.h" />
+    <ClInclude Include="src\PrimaryIncludes.h" />
+    <ClInclude Include="src\Viewport.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

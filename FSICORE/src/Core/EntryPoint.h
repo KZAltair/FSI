@@ -1,4 +1,6 @@
 #pragma once
+#include "Core/Log.h"
+#include "Core/Application.h"
 
 #ifdef FSI_PLATFORM_WINDOWS
 

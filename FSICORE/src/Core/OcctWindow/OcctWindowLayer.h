@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Layer.h"
 
-
 //Opencascade includes
 #include <Aspect_DisplayConnection.hxx>
 #include <Aspect_RenderingContext.hxx>
@@ -11,6 +10,8 @@
 #include <AIS_InteractiveContext.hxx>
 #include <AIS_ViewController.hxx>
 #include <OpenGl_GraphicDriver.hxx>
+#include <Image_PixMap.hxx>
+#include <OpenGl_Texture.hxx>
 
 namespace fsicore
 {
@@ -102,6 +103,9 @@ namespace fsicore
         virtual void OnAttach() override;
         virtual void OnDetach() override;
         virtual void OnOcctWindowRender() override;
+
+    protected:
+        unsigned int GetTexID() const;
     private:
         //Occt vars
         Handle(V3d_View) mainView;
@@ -109,5 +113,9 @@ namespace fsicore
         Handle(AIS_InteractiveContext) h_aisInteractor;
         Handle_OpenGl_Context h_occtGLcontext;
         void* rawGlContext;
+        Handle(OpenGl_Texture) t;
+        Image_PixMap anImage;
+        int occtWinWidth = 0;
+        int occtWinHeight = 0;
     };
 }

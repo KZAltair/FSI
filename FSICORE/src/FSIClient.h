@@ -17,7 +17,3 @@
 //----GUI Framework----------------//
 #include "Core/ImGui/ImGuiLayer.h"
 //---------------------------------//
-
-//-----Entry Point ----------//
-#include "Core/EntryPoint.h"
-//---------------------------//

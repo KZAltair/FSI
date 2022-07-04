@@ -95,6 +95,9 @@ namespace fsicore
         h_occtWindow = new OcctWindow(window, app.GetWindow().GetWidth(), app.GetWindow().GetHeight(), "FSI Viewer");
         rawGlContext = ::wglGetCurrentContext();
 
+        occtWinWidth = app.GetWindow().GetWidth();
+        occtWinHeight = app.GetWindow().GetHeight();
+
         Handle(Aspect_DisplayConnection) h_Display;
         Handle(OpenGl_GraphicDriver) aGraphicDriver = new OpenGl_GraphicDriver(h_Display, false);
 
@@ -119,6 +122,10 @@ namespace fsicore
 
     void OcctRenderLayer::OnDetach()
     {
+        if (!t.IsNull())
+        {
+            t->Release(h_occtGLcontext.get());
+        }
         if (!mainView.IsNull())
         {
             mainView->Remove();
@@ -129,8 +136,24 @@ namespace fsicore
 
     void OcctRenderLayer::OnOcctWindowRender()
     {
+        if (!t.IsNull())
+        {
+            t->Release(h_occtGLcontext.get());
+        }
+        t = new OpenGl_Texture();
+        OpenGl_TextureFormat p = OpenGl_TextureFormat::FindSizedFormat(h_occtGLcontext, GL_RGBA8);
+        if (!mainView->ToPixMap(anImage, occtWinWidth, occtWinHeight))
+        {
+            FSI_CORE_ERROR("View dump failed");
+        }
+        //t->Init(m_GLcontext, p, Graphic3d_Vec2i(w, h), Graphic3d_TypeOfTexture::Graphic3d_TypeOfTexture_2D, &anImage);
+        t->Init(h_occtGLcontext, anImage, Graphic3d_TypeOfTexture_2D, true);
         mainView->Invalidate();
         FlushViewEvents(h_aisInteractor, mainView, true);
+    }
+    unsigned int OcctRenderLayer::GetTexID() const
+    {
+        return t->TextureId();
     }
 }
 

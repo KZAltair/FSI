@@ -17,6 +17,7 @@ namespace fsicore {
 		virtual void OnEvent(Event& event) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnOcctWindowRender() {}
+		virtual void OnImGuiDrawWidget() {}
 
 		inline const std::string& GetName() const { return m_DebugName; }
 	protected:
