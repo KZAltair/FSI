@@ -23,19 +23,19 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
@@ -54,46 +54,44 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Debug_windows_x86_64\FSICORE\</OutDir>
     <IntDir>..\bin-int\Debug_windows_x86_64\FSICORE\</IntDir>
     <TargetName>FSICORE</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\Release_windows_x86_64\FSICORE\</OutDir>
     <IntDir>..\bin-int\Release_windows_x86_64\FSICORE\</IntDir>
     <TargetName>FSICORE</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
-    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\Dist_windows_x86_64\FSICORE\</OutDir>
     <IntDir>..\bin-int\Dist_windows_x86_64\FSICORE\</IntDir>
     <TargetName>FSICORE</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fsipch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>FSI_PLATFORM_WINDOWS;FSI_BUILD_DLL;GLFW_INCLUDE_NONE;FSI_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;3rdparty\spdlog\include;3rdparty\GLFW\include;3rdparty\Glad\include;3rdparty\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FSI_PLATFORM_WINDOWS;FSI_BUILD_DLL;GLFW_INCLUDE_NONE;FSI_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Work\OCCT76REpo-install\debug\inc;src;3rdparty\spdlog\include;3rdparty\GLFW\include;3rdparty\Glad\include;3rdparty\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Debug_windows_x86_64\FSICORE\FSICORE.lib</ImportLibrary>
     </Link>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.dll\ (xcopy /Q /E /Y /I ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Debug_windows_x86_64\VIEWER\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Debug_windows_x86_64\VIEWER\" &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.lib\ (xcopy /Q /E /Y /I ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.lib "..\bin\Debug_windows_x86_64\VIEWER\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug_windows_x86_64\FSICORE\FSICORE.lib "..\bin\Debug_windows_x86_64\VIEWER\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -101,25 +99,26 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fsipch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>FSI_PLATFORM_WINDOWS;FSI_BUILD_DLL;GLFW_INCLUDE_NONE;FSI_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FSI_PLATFORM_WINDOWS;FSI_BUILD_DLL;GLFW_INCLUDE_NONE;FSI_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;3rdparty\spdlog\include;3rdparty\GLFW\include;3rdparty\Glad\include;3rdparty\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Release_windows_x86_64\FSICORE\FSICORE.lib</ImportLibrary>
     </Link>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release_windows_x86_64\FSICORE\FSICORE.dll\ (xcopy /Q /E /Y /I ..\bin\Release_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Release_windows_x86_64\VIEWER\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Release_windows_x86_64\VIEWER\" &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Release_windows_x86_64\FSICORE\FSICORE.lib\ (xcopy /Q /E /Y /I ..\bin\Release_windows_x86_64\FSICORE\FSICORE.lib "..\bin\Release_windows_x86_64\VIEWER\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release_windows_x86_64\FSICORE\FSICORE.lib "..\bin\Release_windows_x86_64\VIEWER\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -127,25 +126,26 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fsipch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>FSI_PLATFORM_WINDOWS;FSI_BUILD_DLL;GLFW_INCLUDE_NONE;FSI_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FSI_PLATFORM_WINDOWS;FSI_BUILD_DLL;GLFW_INCLUDE_NONE;FSI_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;3rdparty\spdlog\include;3rdparty\GLFW\include;3rdparty\Glad\include;3rdparty\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Dist_windows_x86_64\FSICORE\FSICORE.lib</ImportLibrary>
     </Link>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.dll\ (xcopy /Q /E /Y /I ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Dist_windows_x86_64\VIEWER\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.dll "..\bin\Dist_windows_x86_64\VIEWER\" &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.lib\ (xcopy /Q /E /Y /I ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.lib "..\bin\Dist_windows_x86_64\VIEWER\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist_windows_x86_64\FSICORE\FSICORE.lib "..\bin\Dist_windows_x86_64\VIEWER\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -163,6 +163,7 @@
     <ClInclude Include="src\Core\LayerStack.h" />
     <ClInclude Include="src\Core\Log.h" />
     <ClInclude Include="src\Core\MouseButtonCodes.h" />
+    <ClInclude Include="src\Core\OcctWindow\OcctWindowLayer.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\FSIClient.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="src\Core\Layer.cpp" />
     <ClCompile Include="src\Core\LayerStack.cpp" />
     <ClCompile Include="src\Core\Log.cpp" />
+    <ClCompile Include="src\Core\OcctWindow\OcctWindowLayer.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\fsipch.cpp">

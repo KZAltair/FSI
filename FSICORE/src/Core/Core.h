@@ -1,11 +1,15 @@
 #pragma once
 
 #ifdef FSI_PLATFORM_WINDOWS
+#if FSI_DYNAMIC_LINK
 	#ifdef FSI_BUILD_DLL
 		#define FSI_API __declspec(dllexport)
 	#else
 		#define FSI_API __declspec(dllimport)
 	#endif
+#else
+#define FSI_API
+#endif
 #else
 	#error FSI Viewer only supports Windows for now!
 #endif

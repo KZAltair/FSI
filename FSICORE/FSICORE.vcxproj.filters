@@ -10,6 +10,9 @@
     <Filter Include="Core\ImGui">
       <UniqueIdentifier>{D8137ACD-C4CB-BB1A-2DD3-947619AA560B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\OcctWindow">
+      <UniqueIdentifier>{DE7EE186-4A0A-4F4B-531B-D23FBF25AB4B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
@@ -60,6 +63,9 @@
     <ClInclude Include="src\Core\MouseButtonCodes.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\OcctWindow\OcctWindowLayer.h">
+      <Filter>Core\OcctWindow</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Window.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -90,6 +96,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\Log.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\OcctWindow\OcctWindowLayer.cpp">
+      <Filter>Core\OcctWindow</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>Platform\Windows</Filter>

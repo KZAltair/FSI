@@ -8,6 +8,7 @@
 #include "Core/Events/ApplicationEvent.h"
 
 #include "Core/ImGui/ImGuiLayer.h"
+#include "Core/OcctWindow/OcctWindowLayer.h"
 
 namespace fsicore
 {
@@ -28,6 +29,7 @@ namespace fsicore
 	private:
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
+		OcctRenderLayer* m_occtRenderLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	private:

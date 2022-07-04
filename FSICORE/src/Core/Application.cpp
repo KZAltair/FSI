@@ -21,6 +21,9 @@ namespace fsicore
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(FSI_BIND_EVENT_FN(Application::OnEvent));
 
+		m_occtRenderLayer = new OcctRenderLayer();
+		PushLayer(m_occtRenderLayer);
+
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 	}
@@ -60,7 +63,10 @@ namespace fsicore
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
+			{
+				layer->OnOcctWindowRender();
 				layer->OnImGuiRender();
+			}
 			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();

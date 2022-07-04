@@ -24,9 +24,10 @@ include "FSICORE/3rdparty/imgui"
 
 project "FSICORE"
 	location "FSICORE"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") 
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -38,6 +39,11 @@ project "FSICORE"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp"
+	}
+
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	includedirs
@@ -58,7 +64,6 @@ project "FSICORE"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -77,23 +82,24 @@ project "FSICORE"
 	filter "configurations:Debug"
 		defines "FSI_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "FSI_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "FSI_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 project "VIEWER"
 	location "VIEWER"
 	kind "ConsoleApp"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") 
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -117,7 +123,6 @@ project "VIEWER"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -129,14 +134,16 @@ project "VIEWER"
 	filter "configurations:Debug"
 		defines "FSI_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "FSI_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
+		symbols "off"
 
 	filter "configurations:Dist"
 		defines "FSI_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
+		symbols "off"
