@@ -151,6 +151,59 @@ namespace fsicore
         mainView->Invalidate();
         FlushViewEvents(h_aisInteractor, mainView, true);
     }
+    void OcctRenderLayer::OnEvent(Event& e)
+    {
+        EventDispatcher dispatcher(e);
+        dispatcher.Dispatch<WindowResizeEvent>(FSI_BIND_EVENT_FN(OcctRenderLayer::OnChangeSizeOcct));
+        dispatcher.Dispatch<MouseScrolledEvent>(FSI_BIND_EVENT_FN(OcctRenderLayer::OnMouseScrolled));
+        dispatcher.Dispatch<MouseMovedEvent>(FSI_BIND_EVENT_FN(OcctRenderLayer::OnMouseMoveEvent));
+       
+    }
+    bool OcctRenderLayer::OnMouseScrolled(MouseScrolledEvent& e)
+    {
+        /*
+        Graphic3d_Vec2i pos;
+        pos.SetValues(int(mouseX), int(mouseY));
+        
+
+        return UpdateZoom(Aspect_ScrollDelta(pos, int(e.GetYOffset() * 8.0)));
+        */
+        return false;
+    }
+
+    bool OcctRenderLayer::OnMouseMoveEvent(MouseMovedEvent& e)
+    {
+        /*
+        mouseX = e.GetX();
+        mouseY = e.GetY();
+        Graphic3d_Vec2i pos;
+        pos.SetValues(int(mouseX), int(mouseY));
+        
+        return UpdateMousePosition(pos, PressedMouseButtons(), LastMouseFlags(), false);
+        */
+        return false;
+    }
+
+    bool OcctRenderLayer::OnChangeSizeOcct(WindowResizeEvent& e)
+    {
+        Application& app = Application::Get();
+        occtWinWidth = app.GetWindow().GetWidth();
+        occtWinHeight = app.GetWindow().GetHeight();
+        Standard_Integer size[2];
+        size[0] = app.GetWindow().GetWidth();
+        size[1] = app.GetWindow().GetHeight();
+        if (size[0] != 0
+            && size[1] != 0
+            && !mainView.IsNull())
+        {
+            //h_occtGLcontext->ResizeViewport(size);
+            mainView->Window()->DoResize();
+            mainView->MustBeResized();
+            mainView->Invalidate();
+            mainView->Redraw();
+        }
+        return false;
+    }
     unsigned int OcctRenderLayer::GetTexID() const
     {
         return t->TextureId();

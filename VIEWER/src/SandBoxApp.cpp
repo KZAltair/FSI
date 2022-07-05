@@ -9,7 +9,6 @@ public:
 	{
 		PushLayer(new Occt());
 		PushLayer(new GuiInterface());
-		
 	}
 	~Sandbox()
 	{

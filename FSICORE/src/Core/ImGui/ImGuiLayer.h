@@ -8,7 +8,7 @@
 
 namespace fsicore {
 
-	class FSI_API ImGuiLayer : public Layer
+	class FSI_API ImGuiLayer : virtual public Layer
 	{
 	public:
 		ImGuiLayer();
@@ -18,6 +18,7 @@ namespace fsicore {
 		virtual void OnDetach() override;
 		virtual void OnImGuiRender() override;
 		virtual void OnEvent(Event& e) override;
+		bool OnMouseScrolled(MouseScrolledEvent& e);
 		void BlockEvents(bool block) { m_BlockEvents = block; }
 
 		void Begin();
@@ -26,7 +27,7 @@ namespace fsicore {
 	private:
 		float m_Time = 0.0f;
 
-		bool m_BlockEvents = true;
+		bool m_BlockEvents = false;
 	};
 
 }

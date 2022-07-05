@@ -24,16 +24,22 @@ namespace fsicore
 		void PushOverlay(Layer* layer);
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& Get() { return *s_Instance; }
+		OcctRenderLayer* GetOcctLayer() { return m_occtRenderLayer; }
+		ImGuiLayer* GetImGuiLayer() const { return m_ImGuiLayer; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 	private:
 		std::unique_ptr<Window> m_Window;
-		ImGuiLayer* m_ImGuiLayer;
-		OcctRenderLayer* m_occtRenderLayer;
+		
+		
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	private:
 		static Application* s_Instance;
+
+	protected:
+		OcctRenderLayer* m_occtRenderLayer;
+		ImGuiLayer* m_ImGuiLayer;
 	};
 
 	//To be defined at client side

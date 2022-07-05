@@ -1,5 +1,8 @@
 #pragma once
+#include "Core/Core.h"
 #include "Core/Layer.h"
+#include "Core/Events/MouseEvent.h"
+#include "Core/Events/ApplicationEvent.h"
 
 //Opencascade includes
 #include <Aspect_DisplayConnection.hxx>
@@ -94,7 +97,7 @@ namespace fsicore
         Standard_Integer myYBottom;
     };
 
-    class FSI_API OcctRenderLayer : public Layer, protected AIS_ViewController
+    class FSI_API OcctRenderLayer : virtual public Layer, public AIS_ViewController
     {
     public:
         OcctRenderLayer();
@@ -103,9 +106,18 @@ namespace fsicore
         virtual void OnAttach() override;
         virtual void OnDetach() override;
         virtual void OnOcctWindowRender() override;
+        virtual void OnEvent(Event& e) override;
 
-    protected:
+        bool OnMouseScrolled(MouseScrolledEvent& e);
+        bool OnMouseMoveEvent(MouseMovedEvent& e);
+        bool OnChangeSizeOcct(WindowResizeEvent& e);
+
+        Handle(AIS_InteractiveContext) GetContext() const { return h_aisInteractor; }
+        Handle(V3d_View) GetView() const { return mainView;  }
+        Handle(OcctWindow) GetOcctWindow() const { return h_occtWindow; }
         unsigned int GetTexID() const;
+    protected:
+        
     private:
         //Occt vars
         Handle(V3d_View) mainView;
@@ -117,5 +129,11 @@ namespace fsicore
         Image_PixMap anImage;
         int occtWinWidth = 0;
         int occtWinHeight = 0;
+
+        float m_ZoomLevel = 1.0f;
+        float mouseX = 0.0f;
+        float mouseY = 0.0f;
+
+        
     };
 }

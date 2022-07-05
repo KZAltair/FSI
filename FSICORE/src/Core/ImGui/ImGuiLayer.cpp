@@ -127,12 +127,21 @@ namespace fsicore {
 
 	void ImGuiLayer::OnEvent(Event& e)
 	{
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<MouseScrolledEvent>(FSI_BIND_EVENT_FN(ImGuiLayer::OnMouseScrolled));
+
 		if (m_BlockEvents)
 		{
 			ImGuiIO& io = ImGui::GetIO();
 			e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
 			e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
 		}
+	}
+
+	bool ImGuiLayer::OnMouseScrolled(MouseScrolledEvent& e)
+	{
+		FSI_CORE_INFO("ImGui scrolled Event was called!");
+		return false;
 	}
 
 }

@@ -77,10 +77,10 @@
       <PrecompiledHeaderFile>fsipch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FSI_PLATFORM_WINDOWS;FSI_BUILD_DLL;GLFW_INCLUDE_NONE;FSI_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Work\OCCT76REpo-install\debug\inc;src;3rdparty\spdlog\include;3rdparty\GLFW\include;3rdparty\Glad\include;3rdparty\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Work\FSIProject\FSICORE\3rdparty;D:\Work\fsi_sdk\fsi_sdk\external;D:\Work\deps\IfcOpenShell-install\include;D:\Work\deps\boost_1_74_0\include\boost-1_74;D:\Work\OCCT76REpo-install\debug\inc;src;3rdparty\spdlog\include;3rdparty\GLFW\include;3rdparty\Glad\include;3rdparty\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -166,6 +166,10 @@
     <ClInclude Include="src\Core\OcctWindow\OcctWindowLayer.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\FSIClient.h" />
+    <ClInclude Include="src\IfcReader\FSIBasicTypes.h" />
+    <ClInclude Include="src\IfcReader\FSIObjectTypes.h" />
+    <ClInclude Include="src\IfcReader\FSIScene.h" />
+    <ClInclude Include="src\IfcReader\IfcReader.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\fsipch.h" />
@@ -178,6 +182,8 @@
     <ClCompile Include="src\Core\LayerStack.cpp" />
     <ClCompile Include="src\Core\Log.cpp" />
     <ClCompile Include="src\Core\OcctWindow\OcctWindowLayer.cpp" />
+    <ClCompile Include="src\IfcReader\FSIScene.cpp" />
+    <ClCompile Include="src\IfcReader\IfcReader.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\fsipch.cpp">

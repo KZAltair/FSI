@@ -77,6 +77,10 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\fsipch.h" />
+    <ClInclude Include="src\IfcReader\FSIBasicTypes.h" />
+    <ClInclude Include="src\IfcReader\FSIObjectTypes.h" />
+    <ClInclude Include="src\IfcReader\FSIScene.h" />
+    <ClInclude Include="src\IfcReader\IfcReader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -107,5 +111,7 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\fsipch.cpp" />
+    <ClCompile Include="src\IfcReader\FSIScene.cpp" />
+    <ClCompile Include="src\IfcReader\IfcReader.cpp" />
   </ItemGroup>
 </Project>
