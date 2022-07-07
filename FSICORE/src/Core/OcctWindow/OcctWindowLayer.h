@@ -10,11 +10,11 @@
 #include <Aspect_Window.hxx>
 #include <TCollection_AsciiString.hxx>
 #include <V3d_View.hxx>
-#include <AIS_InteractiveContext.hxx>
 #include <AIS_ViewController.hxx>
 #include <OpenGl_GraphicDriver.hxx>
 #include <Image_PixMap.hxx>
 #include <OpenGl_Texture.hxx>
+#include <Graphic3d_CView.hxx>
 
 namespace fsicore
 {
@@ -107,22 +107,22 @@ namespace fsicore
         virtual void OnDetach() override;
         virtual void OnOcctWindowRender() override;
         virtual void OnEvent(Event& e) override;
-
-        bool OnMouseScrolled(MouseScrolledEvent& e);
-        bool OnMouseMoveEvent(MouseMovedEvent& e);
         bool OnChangeSizeOcct(WindowResizeEvent& e);
 
-        Handle(AIS_InteractiveContext) GetContext() const { return h_aisInteractor; }
         Handle(V3d_View) GetView() const { return mainView;  }
+        Handle(V3d_Viewer) GetViewer() const { return aViewer; }
         Handle(OcctWindow) GetOcctWindow() const { return h_occtWindow; }
+        
         unsigned int GetTexID() const;
     protected:
         
     private:
         //Occt vars
+        Handle(V3d_Viewer) aViewer;
         Handle(V3d_View) mainView;
         Handle(OcctWindow) h_occtWindow;
-        Handle(AIS_InteractiveContext) h_aisInteractor;
+        Handle(Graphic3d_CView) viewport;
+        
         Handle_OpenGl_Context h_occtGLcontext;
         void* rawGlContext;
         Handle(OpenGl_Texture) t;

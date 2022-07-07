@@ -81,6 +81,8 @@
     <ClInclude Include="src\IfcReader\FSIObjectTypes.h" />
     <ClInclude Include="src\IfcReader\FSIScene.h" />
     <ClInclude Include="src\IfcReader\IfcReader.h" />
+    <ClInclude Include="src\Core\MouseCodes.h" />
+    <ClInclude Include="src\Core\OcctWindow\SceneContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -113,5 +115,6 @@
     <ClCompile Include="src\fsipch.cpp" />
     <ClCompile Include="src\IfcReader\FSIScene.cpp" />
     <ClCompile Include="src\IfcReader\IfcReader.cpp" />
+    <ClCompile Include="src\Core\OcctWindow\SceneContainer.cpp" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 #include "glad/glad.h"
+#include <OpenGl_Caps.hxx>
 
 
 namespace fsicore
@@ -94,7 +95,7 @@ namespace fsicore
         //Critial to init occt window before all callbacks
         h_occtWindow = new OcctWindow(window, app.GetWindow().GetWidth(), app.GetWindow().GetHeight(), "FSI Viewer");
         rawGlContext = ::wglGetCurrentContext();
-
+        h_occtWindow->SetVirtual(Standard_True);
         occtWinWidth = app.GetWindow().GetWidth();
         occtWinHeight = app.GetWindow().GetHeight();
 
@@ -103,17 +104,19 @@ namespace fsicore
 
         //Important to not flush 3D buffer after rendering to render gui on top and then flush with OpenGL swap buffers
         aGraphicDriver->SetBuffersNoSwap(true);
-        Handle(V3d_Viewer) aViewer = new V3d_Viewer(aGraphicDriver);
-
+        aViewer = new V3d_Viewer(aGraphicDriver);
         aViewer->SetDefaultLights();
         aViewer->SetLightOn();
         aViewer->SetDefaultTypeOfView(V3d_PERSPECTIVE);
+        Quantity_Color bgColor = Quantity_Color(0.2f, 0.2f, 0.2f, Quantity_TypeOfColor::Quantity_TOC_sRGB);
+        aViewer->SetDefaultBackgroundColor(bgColor);
         aViewer->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
         mainView = aViewer->CreateView();
+        mainView->Camera()->SetAspect(occtWinWidth / occtWinHeight);
         mainView->SetImmediateUpdate(false);
         mainView->SetWindow(h_occtWindow, h_occtWindow->NativeGlContext());
-        mainView->ChangeRenderingParams().ToShowStats = true;
-        h_aisInteractor = new AIS_InteractiveContext(aViewer);
+        viewport = mainView->View();
+        //mainView->ChangeRenderingParams().ToShowStats = true;
         h_occtGLcontext = new OpenGl_Context();
         h_occtGLcontext->Init((HWND)(mainView->Window()->NativeHandle()), ::GetDC((HWND)(mainView->Window()->NativeHandle())), rawGlContext);
         //h_occtGLcontext->ResizeViewport(size);
@@ -148,40 +151,14 @@ namespace fsicore
         }
         //t->Init(m_GLcontext, p, Graphic3d_Vec2i(w, h), Graphic3d_TypeOfTexture::Graphic3d_TypeOfTexture_2D, &anImage);
         t->Init(h_occtGLcontext, anImage, Graphic3d_TypeOfTexture_2D, true);
-        mainView->Invalidate();
-        FlushViewEvents(h_aisInteractor, mainView, true);
+        //mainView->Invalidate();
+        //FlushViewEvents(h_aisInteractor, mainView, true);
     }
     void OcctRenderLayer::OnEvent(Event& e)
     {
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowResizeEvent>(FSI_BIND_EVENT_FN(OcctRenderLayer::OnChangeSizeOcct));
-        dispatcher.Dispatch<MouseScrolledEvent>(FSI_BIND_EVENT_FN(OcctRenderLayer::OnMouseScrolled));
-        dispatcher.Dispatch<MouseMovedEvent>(FSI_BIND_EVENT_FN(OcctRenderLayer::OnMouseMoveEvent));
        
-    }
-    bool OcctRenderLayer::OnMouseScrolled(MouseScrolledEvent& e)
-    {
-        /*
-        Graphic3d_Vec2i pos;
-        pos.SetValues(int(mouseX), int(mouseY));
-        
-
-        return UpdateZoom(Aspect_ScrollDelta(pos, int(e.GetYOffset() * 8.0)));
-        */
-        return false;
-    }
-
-    bool OcctRenderLayer::OnMouseMoveEvent(MouseMovedEvent& e)
-    {
-        /*
-        mouseX = e.GetX();
-        mouseY = e.GetY();
-        Graphic3d_Vec2i pos;
-        pos.SetValues(int(mouseX), int(mouseY));
-        
-        return UpdateMousePosition(pos, PressedMouseButtons(), LastMouseFlags(), false);
-        */
-        return false;
     }
 
     bool OcctRenderLayer::OnChangeSizeOcct(WindowResizeEvent& e)

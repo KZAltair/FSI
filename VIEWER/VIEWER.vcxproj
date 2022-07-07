@@ -138,11 +138,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\GuiInterface.h" />
+    <ClInclude Include="src\ModelContainer.h" />
     <ClInclude Include="src\PrimaryIncludes.h" />
     <ClInclude Include="src\Viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GuiInterface.cpp" />
+    <ClCompile Include="src\ModelContainer.cpp" />
     <ClCompile Include="src\SandBoxApp.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
   </ItemGroup>

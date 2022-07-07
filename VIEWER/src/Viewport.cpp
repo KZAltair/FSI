@@ -1,9 +1,11 @@
 #include "Viewport.h"
-#include <BRepCheck_Analyzer.hxx>
 #include <AIS_Shape.hxx>
+#include <BRepCheck_Analyzer.hxx>
 #include <BRepPrimAPI_MakeBox.hxx>
 #include <BRepPrimAPI_MakeCone.hxx>
 #include <AIS_InteractiveContext.hxx>
+
+
 #include "Core/Application.h"
 
 namespace oc {
@@ -45,13 +47,113 @@ Occt::Occt()
 {
 	fsicore::Application* app = &fsicore::Application::Get();
 	occtLayer = app->GetOcctLayer();
-	ProcessShape();
+	p_ModelsContainer = app->GetSceneContainer();
 	occtLayer->GetView()->MustBeResized();
 	occtLayer->GetOcctWindow()->Map();
 }
 void Occt::OnUpdate()
 {
-	FlushViewEvents(occtLayer->GetContext(), occtLayer->GetView(), true);
+	if (m_ViewportFocused && m_ViewportHovered)
+	{
+		if (fsicore::Input::IsMouseButtonPressed(fsicore::Mouse::ButtonLeft))
+		{
+			//TODO: fix rotation position
+			Graphic3d_Vec2i pos = {};
+			pos.SetValues(int(fsicore::Input::GetMouseX()), int(fsicore::Input::GetMouseY()));
+			occtLayer->GetView()->StartRotation(pos.x(), pos.y());
+
+		}
+
+		if (fsicore::Input::IsKeyPressed(FSI_KEY_C))
+		{
+			if (testShapesLoading)
+			{
+				if (h_aisInteractor.IsNull())
+				{
+					if (!occtLayer->GetViewer().IsNull())
+					{
+						h_aisInteractor = new AIS_InteractiveContext(occtLayer->GetViewer());
+						GenerateObjects(h_aisInteractor);
+						testShapesLoading = false;
+					}
+				}
+				else
+				{
+					GenerateObjects(h_aisInteractor);
+					testShapesLoading = false;
+				}
+				
+			}
+		}
+		if (fsicore::Input::IsKeyPressed(FSI_KEY_D))
+		{
+			if (!testShapesLoading)
+			{
+				if (!h_aisInteractor.IsNull())
+				{
+					/*
+					for (auto& handle : shapesHandle)
+					{
+						h_aisInteractor->Remove(handle, false);
+						//GetContext()->SelectionManager()->Remove(handle);
+						handle.Nullify();
+					}
+					for (auto& sh : shapes)
+					{
+						sh.Nullify();
+					}
+					*/
+					h_aisInteractor->RemoveAll(false);
+					h_aisInteractor.Nullify();
+				}
+				testShapesLoading = true;
+			}
+		}
+	}
+	
+	if (p_ModelsContainer->IsLoading())
+	{
+		if (h_aisInteractor.IsNull())
+		{
+			if (!occtLayer->GetViewer().IsNull())
+			{
+				h_aisInteractor = new AIS_InteractiveContext(occtLayer->GetViewer());
+				ProcessShape(h_aisInteractor);
+				occtLayer->GetView()->FitAll();
+				p_ModelsContainer->SetLoadingStatus(false);
+			}
+		}
+		else
+		{
+			ProcessShape(h_aisInteractor);
+			occtLayer->GetView()->FitAll();
+			p_ModelsContainer->SetLoadingStatus(false);
+		}
+		
+	}
+	if (p_ModelsContainer->IsRemoved())
+	{
+		if (!h_aisInteractor.IsNull())
+		{
+			/*
+			for (auto& handle : shapesHandle)
+			{
+				h_aisInteractor->Remove(handle, false);
+				h_aisInteractor->SelectionManager()->Remove(handle);
+				handle.Nullify();
+				p_ModelsContainer->SetRemovedStatus(false);
+			}
+			*/
+			h_aisInteractor->RemoveAll(false);
+			h_aisInteractor.Nullify();
+		}
+		
+	}
+	if (!h_aisInteractor.IsNull())
+	{
+		FlushViewEvents(h_aisInteractor, occtLayer->GetView(), true);
+	}
+	
 }
 
 void Occt::OnImGuiRender()
@@ -79,13 +181,11 @@ void Occt::OnImGuiRender()
 	ImGui::End();
 
 	ImGui::Begin("Perspective");
-
 	auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
 	auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
 	auto viewportOffset = ImGui::GetWindowPos();
 	m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
 	m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
-
 	m_ViewportFocused = ImGui::IsWindowFocused();
 	m_ViewportHovered = ImGui::IsWindowHovered();
 	fsicore::Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
@@ -104,14 +204,11 @@ void Occt::OnImGuiDrawWidget()
 
 }
 
-void Occt::AddShape(const TopoDS_Shape& shape)
+void Occt::ProcessShape(Handle(AIS_InteractiveContext) h_aisInteractor)
 {
-	m_shapes.push_back(shape);
-}
-
-void Occt::ProcessShape()
-{
-	if (occtLayer->GetContext().IsNull())
+	std::vector<Handle(AIS_Shape)> shapesHandle;
+	std::vector<TopoDS_Shape> shapes;
+	if (h_aisInteractor.IsNull())
 	{
 		return;
 	}
@@ -120,16 +217,81 @@ void Occt::ProcessShape()
 
 	gp_Ax2 anAxis;
 	anAxis.SetLocation(gp_Pnt(100.0, 100.0, 0.0));
-	AddShape(BRepPrimAPI_MakeBox(50, 100, 20));
-	AddShape(BRepPrimAPI_MakeCone(anAxis, 25, 0, 50));
+	//AddShape(BRepPrimAPI_MakeBox(50, 100, 20));
+	//AddShape(BRepPrimAPI_MakeCone(anAxis, 25, 0, 50));
 
 	Standard_Real moveX = 0.0;
 	anAxis.SetLocation(gp_Pnt(0.0, 0.0, 0.0));
-	for (auto sh : m_shapes)
+	
+	m_objects = p_ModelsContainer->GetScenePtr()->getObjects();
+
+	for (size_t i = 0; i < m_objects.size(); ++i)
+	{
+		auto pGeomObj = std::dynamic_pointer_cast<fsi::GeometryObject>(m_objects.at(i));
+		if (pGeomObj)
+		{
+			if (pGeomObj->m_shape)
+			{
+
+				shapesHandle.push_back(new AIS_Shape(*pGeomObj->m_shape));
+				h_aisInteractor->Display(shapesHandle.back(), AIS_Shaded, 0, false);
+
+				// Adjust selection style.
+				oc::AdjustSelectionStyle(h_aisInteractor);
+
+				// Activate selection modes.
+				h_aisInteractor->Activate(4, true); // faces
+				h_aisInteractor->Activate(2, true); // edges
+			}
+		}
+	}
+}
+
+void Occt::GenerateObjects(Handle(AIS_InteractiveContext) h_aisInteractor)
+{
+	//Add shapes
+	std::vector<Handle(AIS_Shape)> shapesHandle;
+	std::vector<TopoDS_Shape> shapes;
+	occtLayer->GetView()->TriedronDisplay(Aspect_TOTP_LEFT_LOWER, Quantity_NOC_GOLD, 0.08, V3d_WIREFRAME);
+	for (size_t i = 0; i < 2; ++i)
+	{
+		gp_Pnt p;
+		Standard_Real xCoord = (Standard_Real)(i * 150);
+		p.SetX(xCoord);
+		shapes.push_back(BRepPrimAPI_MakeBox(p, 50, 100, 20));
+		
+	}
+
+	for (size_t i = 0; i < shapes.size(); ++i)
+	{
+		shapesHandle.push_back(new AIS_Shape(shapes.at(i)));
+		h_aisInteractor->Display(shapesHandle.at(i), AIS_Shaded, 0, false);
+
+		oc::AdjustSelectionStyle(h_aisInteractor);
+
+		// Activate selection modes.
+		h_aisInteractor->Activate(4, true); // faces
+		h_aisInteractor->Activate(2, true); // edges
+	}
+	//testShapes.push_back(BRepPrimAPI_MakeBox(50, 100, 20));
+	//gp_Ax2 anAxis;
+	//anAxis.SetLocation(gp_Pnt(100.0, 100.0, 0.0));
+	//testShapes.push_back(BRepPrimAPI_MakeCone(anAxis, 25, 0, 50));
+	//Process shapes
+	
+	// Adjust selection style.
+	oc::AdjustSelectionStyle(h_aisInteractor);
+
+	// Activate selection modes.
+	h_aisInteractor->Activate(4, true); // faces
+	h_aisInteractor->Activate(2, true); // edges
+	/*
+	float moveX = 0.0f;
+	for (size_t i = 0; i < testShapes.size(); ++i)
 	{
 
-		Handle(AIS_Shape) shape = new AIS_Shape(sh);
-		occtLayer->GetContext()->Display(shape, AIS_Shaded, 0, false);
+		shapeHandles.push_back(new AIS_Shape(testShapes.at(i)));
+		occtLayer->GetContext()->Display(shapeHandles.at(i), AIS_Shaded, 0, false);
 		anAxis.SetLocation(gp_Pnt(moveX + 50.0, 125.0, 0.0));
 
 		// Adjust selection style.
@@ -140,4 +302,32 @@ void Occt::ProcessShape()
 		occtLayer->GetContext()->Activate(2, true); // edges
 		moveX += 20.0;
 	}
+	*/
+}
+
+void Occt::OnEvent(fsicore::Event& e)
+{
+	fsicore::EventDispatcher dispatcher(e);
+	dispatcher.Dispatch<fsicore::MouseScrolledEvent>(FSI_BIND_EVENT_FN(Occt::OnMouseScrolled));
+	dispatcher.Dispatch<fsicore::MouseMovedEvent>(FSI_BIND_EVENT_FN(Occt::OnMouseMoveEvent));
+}
+
+bool Occt::OnMouseScrolled(fsicore::MouseScrolledEvent& e)
+{
+
+	UpdateZoom(Aspect_ScrollDelta(pos, int(e.GetYOffset() * 8.0)));
+	return false;
+}
+
+bool Occt::OnMouseMoveEvent(fsicore::MouseMovedEvent& e)
+{
+	
+	pos.SetValues(int(e.GetX()), int(e.GetY()));
+	if (fsicore::Input::IsMouseButtonPressed(fsicore::Mouse::ButtonLeft))
+	{
+		occtLayer->GetView()->Rotation(pos.x(), pos.y());
+	}
+
+	UpdateMousePosition(pos, occtLayer->PressedMouseButtons(), occtLayer->LastMouseFlags(), false);
+	return false;
 }

@@ -24,6 +24,8 @@ namespace fsicore
 		m_occtRenderLayer = new OcctRenderLayer();
 		PushLayer(m_occtRenderLayer);
 
+		m_SceneContainer = new SceneContainer();
+		PushLayer(m_SceneContainer);
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 	}

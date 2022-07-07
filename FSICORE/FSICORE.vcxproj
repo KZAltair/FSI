@@ -163,7 +163,9 @@
     <ClInclude Include="src\Core\LayerStack.h" />
     <ClInclude Include="src\Core\Log.h" />
     <ClInclude Include="src\Core\MouseButtonCodes.h" />
+    <ClInclude Include="src\Core\MouseCodes.h" />
     <ClInclude Include="src\Core\OcctWindow\OcctWindowLayer.h" />
+    <ClInclude Include="src\Core\OcctWindow\SceneContainer.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\FSIClient.h" />
     <ClInclude Include="src\IfcReader\FSIBasicTypes.h" />
@@ -182,6 +184,7 @@
     <ClCompile Include="src\Core\LayerStack.cpp" />
     <ClCompile Include="src\Core\Log.cpp" />
     <ClCompile Include="src\Core\OcctWindow\OcctWindowLayer.cpp" />
+    <ClCompile Include="src\Core\OcctWindow\SceneContainer.cpp" />
     <ClCompile Include="src\IfcReader\FSIScene.cpp" />
     <ClCompile Include="src\IfcReader\IfcReader.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />

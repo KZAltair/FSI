@@ -9,6 +9,7 @@
 
 #include "Core/ImGui/ImGuiLayer.h"
 #include "Core/OcctWindow/OcctWindowLayer.h"
+#include "Core/OcctWindow/SceneContainer.h"
 
 namespace fsicore
 {
@@ -26,6 +27,7 @@ namespace fsicore
 		inline static Application& Get() { return *s_Instance; }
 		OcctRenderLayer* GetOcctLayer() { return m_occtRenderLayer; }
 		ImGuiLayer* GetImGuiLayer() const { return m_ImGuiLayer; }
+		SceneContainer* GetSceneContainer() const { return m_SceneContainer; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 	private:
@@ -40,6 +42,7 @@ namespace fsicore
 	protected:
 		OcctRenderLayer* m_occtRenderLayer;
 		ImGuiLayer* m_ImGuiLayer;
+		SceneContainer* m_SceneContainer;
 	};
 
 	//To be defined at client side
