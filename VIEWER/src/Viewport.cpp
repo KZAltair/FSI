@@ -45,11 +45,17 @@ namespace oc {
 
 Occt::Occt()
 {
+	//Init
+	h_aisInteractor.Nullify();
+
 	fsicore::Application* app = &fsicore::Application::Get();
 	occtLayer = app->GetOcctLayer();
 	p_ModelsContainer = app->GetSceneContainer();
+	h_aisInteractor = new AIS_InteractiveContext(occtLayer->GetViewer());
 	occtLayer->GetView()->MustBeResized();
 	occtLayer->GetOcctWindow()->Map();
+
+	//occtLayer->GetView()->TriedronDisplay(Aspect_TOTP_LEFT_LOWER, Quantity_NOC_GOLD, 0.08, V3d_WIREFRAME);
 }
 void Occt::OnUpdate()
 {
@@ -103,8 +109,10 @@ void Occt::OnUpdate()
 						sh.Nullify();
 					}
 					*/
-					h_aisInteractor->RemoveAll(false);
+					h_aisInteractor->Deactivate();
+					h_aisInteractor->RemoveAll(true);
 					h_aisInteractor.Nullify();
+					
 				}
 				testShapesLoading = true;
 			}
@@ -144,14 +152,17 @@ void Occt::OnUpdate()
 				p_ModelsContainer->SetRemovedStatus(false);
 			}
 			*/
+			h_aisInteractor->Deactivate();
+			
 			h_aisInteractor->RemoveAll(false);
+
 			h_aisInteractor.Nullify();
 		}
 		
 	}
 	if (!h_aisInteractor.IsNull())
 	{
-		FlushViewEvents(h_aisInteractor, occtLayer->GetView(), true);
+		occtLayer->FlushViewEvents(h_aisInteractor, occtLayer->GetView(), true);
 	}
 	
 }
@@ -204,24 +215,11 @@ void Occt::OnImGuiDrawWidget()
 
 }
 
-void Occt::ProcessShape(Handle(AIS_InteractiveContext) h_aisInteractor)
+void Occt::ProcessShape(Handle(AIS_InteractiveContext) h_aisModel)
 {
-	std::vector<Handle(AIS_Shape)> shapesHandle;
+	
 	std::vector<TopoDS_Shape> shapes;
-	if (h_aisInteractor.IsNull())
-	{
-		return;
-	}
-
-	occtLayer->GetView()->TriedronDisplay(Aspect_TOTP_LEFT_LOWER, Quantity_NOC_GOLD, 0.08, V3d_WIREFRAME);
-
-	gp_Ax2 anAxis;
-	anAxis.SetLocation(gp_Pnt(100.0, 100.0, 0.0));
-	//AddShape(BRepPrimAPI_MakeBox(50, 100, 20));
-	//AddShape(BRepPrimAPI_MakeCone(anAxis, 25, 0, 50));
-
-	Standard_Real moveX = 0.0;
-	anAxis.SetLocation(gp_Pnt(0.0, 0.0, 0.0));
+	
 	
 	m_objects = p_ModelsContainer->GetScenePtr()->getObjects();
 
@@ -233,26 +231,31 @@ void Occt::ProcessShape(Handle(AIS_InteractiveContext) h_aisInteractor)
 			if (pGeomObj->m_shape)
 			{
 
-				shapesHandle.push_back(new AIS_Shape(*pGeomObj->m_shape));
-				h_aisInteractor->Display(shapesHandle.back(), AIS_Shaded, 0, false);
+				shHandle.push_back(new AIS_Shape(*pGeomObj->m_shape));
+				h_aisModel->Display(shHandle.back(), AIS_Shaded, 0, false);
 
 				// Adjust selection style.
-				oc::AdjustSelectionStyle(h_aisInteractor);
+				oc::AdjustSelectionStyle(h_aisModel);
 
 				// Activate selection modes.
-				h_aisInteractor->Activate(4, true); // faces
-				h_aisInteractor->Activate(2, true); // edges
+				h_aisModel->Activate(4, true); // faces
+				h_aisModel->Activate(2, true); // edges
 			}
 		}
 	}
 }
 
-void Occt::GenerateObjects(Handle(AIS_InteractiveContext) h_aisInteractor)
+void Occt::GenerateObjects(Handle(AIS_InteractiveContext) h_ais)
 {
-	//Add shapes
-	std::vector<Handle(AIS_Shape)> shapesHandle;
+	//!!!!!Ciritial importance. Can't name handles with the same name. They should be unique
+	Handle(AIS_Shape) shapeHandle;
+	if (!shapeHandle.IsNull())
+	{
+		FSI_INFO("Handle was not released!");
+		return;
+	}
 	std::vector<TopoDS_Shape> shapes;
-	occtLayer->GetView()->TriedronDisplay(Aspect_TOTP_LEFT_LOWER, Quantity_NOC_GOLD, 0.08, V3d_WIREFRAME);
+	
 	for (size_t i = 0; i < 2; ++i)
 	{
 		gp_Pnt p;
@@ -264,14 +267,14 @@ void Occt::GenerateObjects(Handle(AIS_InteractiveContext) h_aisInteractor)
 
 	for (size_t i = 0; i < shapes.size(); ++i)
 	{
-		shapesHandle.push_back(new AIS_Shape(shapes.at(i)));
-		h_aisInteractor->Display(shapesHandle.at(i), AIS_Shaded, 0, false);
+		shapeHandle = new AIS_Shape(shapes.at(i));
+		h_ais->Display(shapeHandle, AIS_Shaded, 0, false);
 
-		oc::AdjustSelectionStyle(h_aisInteractor);
+		oc::AdjustSelectionStyle(h_ais);
 
 		// Activate selection modes.
-		h_aisInteractor->Activate(4, true); // faces
-		h_aisInteractor->Activate(2, true); // edges
+		h_ais->Activate(4, true); // faces
+		h_ais->Activate(2, true); // edges
 	}
 	//testShapes.push_back(BRepPrimAPI_MakeBox(50, 100, 20));
 	//gp_Ax2 anAxis;
@@ -279,12 +282,6 @@ void Occt::GenerateObjects(Handle(AIS_InteractiveContext) h_aisInteractor)
 	//testShapes.push_back(BRepPrimAPI_MakeCone(anAxis, 25, 0, 50));
 	//Process shapes
 	
-	// Adjust selection style.
-	oc::AdjustSelectionStyle(h_aisInteractor);
-
-	// Activate selection modes.
-	h_aisInteractor->Activate(4, true); // faces
-	h_aisInteractor->Activate(2, true); // edges
 	/*
 	float moveX = 0.0f;
 	for (size_t i = 0; i < testShapes.size(); ++i)
@@ -310,12 +307,17 @@ void Occt::OnEvent(fsicore::Event& e)
 	fsicore::EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<fsicore::MouseScrolledEvent>(FSI_BIND_EVENT_FN(Occt::OnMouseScrolled));
 	dispatcher.Dispatch<fsicore::MouseMovedEvent>(FSI_BIND_EVENT_FN(Occt::OnMouseMoveEvent));
+	dispatcher.Dispatch<fsicore::OcctShowHideEvent>(FSI_BIND_EVENT_FN(Occt::OnObjectShowHide));
+	dispatcher.Dispatch<fsicore::OcctShowHideSignleObjectEvent>(FSI_BIND_EVENT_FN(Occt::OnShowHideAllObjects));
+	
 }
 
 bool Occt::OnMouseScrolled(fsicore::MouseScrolledEvent& e)
 {
-
-	UpdateZoom(Aspect_ScrollDelta(pos, int(e.GetYOffset() * 8.0)));
+	gp_Pnt p;
+	p.SetX(pos.x());
+	p.SetY(pos.y());
+	occtLayer->handleZoom(occtLayer->GetView(), int(e.GetYOffset() * 8.0), &p);
 	return false;
 }
 
@@ -328,6 +330,41 @@ bool Occt::OnMouseMoveEvent(fsicore::MouseMovedEvent& e)
 		occtLayer->GetView()->Rotation(pos.x(), pos.y());
 	}
 
-	UpdateMousePosition(pos, occtLayer->PressedMouseButtons(), occtLayer->LastMouseFlags(), false);
+	//OCCT standard function to controll mouse
+	occtLayer->UpdateMousePosition(pos, occtLayer->PressedMouseButtons(), occtLayer->LastMouseFlags(), false);
+	return false;
+}
+
+bool Occt::OnObjectShowHide(fsicore::OcctShowHideEvent& e)
+{
+	FSI_INFO("Single object show/hide event in viewport called!");
+	if (e.GetFlag())
+	{
+		h_aisInteractor->Erase(shHandle.at(p_ModelsContainer->GetAisShapeID()), false);
+	}
+	if (!e.GetFlag())
+	{
+		h_aisInteractor->Display(shHandle.at(p_ModelsContainer->GetAisShapeID()), AIS_Shaded, 0, false);
+	}
+	return false;
+}
+
+bool Occt::OnShowHideAllObjects(fsicore::OcctShowHideSignleObjectEvent& e)
+{
+	FSI_INFO("All objects hidden status in viewport called!");
+	if (e.GetFlag())
+	{
+		for (int i = 0; i < (int)shHandle.size(); ++i)
+		{
+			h_aisInteractor->Erase(shHandle.at(i), false);
+		}
+	}
+	if (!e.GetFlag())
+	{
+		for (int i = 0; i < (int)shHandle.size(); ++i)
+		{
+			h_aisInteractor->Display(shHandle.at(i), AIS_Shaded, 0, false);
+		}
+	}
 	return false;
 }

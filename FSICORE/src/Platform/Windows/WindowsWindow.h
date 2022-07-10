@@ -1,12 +1,10 @@
 #pragma once
 
 #include "Core/Window.h"
-
 #include <GLFW/glfw3.h>
 
 namespace fsicore 
 {
-
 	class WindowsWindow : public Window
 	{
 	public:
@@ -23,6 +21,8 @@ namespace fsicore
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
 		inline virtual void* GetNativeWindow() const override { return m_Window; }
+		virtual void SetOcctShowHideEvent(bool flag) override;
+		virtual void SetOcctShowHideSingleObjectEvent(bool flag) override;
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();

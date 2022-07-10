@@ -12,10 +12,12 @@ public:
 	virtual void OnImGuiRender() override;
 	virtual void OnImGuiDrawWidget() override;
 	void ProcessShape(Handle(AIS_InteractiveContext) h_aisInteractor);
-	void GenerateObjects(Handle(AIS_InteractiveContext) h_aisInteractor);
+	void GenerateObjects(Handle(AIS_InteractiveContext) h_ais);
 	virtual void OnEvent(fsicore::Event& e) override;
 	bool OnMouseScrolled(fsicore::MouseScrolledEvent& e);
 	bool OnMouseMoveEvent(fsicore::MouseMovedEvent& e);
+	bool OnObjectShowHide(fsicore::OcctShowHideEvent& e);
+	bool OnShowHideAllObjects(fsicore::OcctShowHideSignleObjectEvent& e);
 	void set_mesh_load_callback(const std::function<void(const std::string&)>& callback)
 	{
 		fsiLoadedMesh = callback;
@@ -24,7 +26,7 @@ public:
 private:
 	Graphic3d_Vec2i pos;
 	Handle(AIS_InteractiveContext) h_aisInteractor;
-	
+	std::vector<Handle(AIS_Shape)> shHandle;
 	fsicore::OcctRenderLayer* occtLayer;
 	bool m_ViewportFocused = false, m_ViewportHovered = false;
 	fsicore::SceneContainer* p_ModelsContainer;

@@ -16,7 +16,8 @@ namespace fsicore {
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
 		KeyPressed, KeyReleased, KeyTyped,
-		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
+		AllObjectShowHide, SingleObjectShowHide
 	};
 
 	enum EventCategory
@@ -26,7 +27,8 @@ namespace fsicore {
 		EventCategoryInput = BIT(1),
 		EventCategoryKeyboard = BIT(2),
 		EventCategoryMouse = BIT(3),
-		EventCategoryMouseButton = BIT(4)
+		EventCategoryMouseButton = BIT(4),
+		EventCategoryOcctWindow = BIT(5)
 	};
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\
@@ -43,6 +45,7 @@ namespace fsicore {
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
+
 		virtual std::string ToString() const { return GetName(); }
 
 		inline bool IsInCategory(EventCategory category)

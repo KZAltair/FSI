@@ -1,14 +1,14 @@
 #include "GuiInterface.h"
-#include "Core/Application.h"
 #include <AIS_Shape.hxx>
 #include <BRepPrimAPI_MakeBox.hxx>
 #include <BRepPrimAPI_MakeCone.hxx>
 
 
+
 GuiInterface::GuiInterface()
 	: Layer("Example")
 {
-	fsicore::Application* app = &fsicore::Application::Get();
+	app = &fsicore::Application::Get();
 	occtLayer = app->GetOcctLayer();
 	p_ModelsContainer = app->GetSceneContainer();
 
@@ -91,8 +91,39 @@ void GuiInterface::OnImGuiRender()
 	}
 	if (ImGui::CollapsingHeader("Object Nodes", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Separator();
-		ImGui::Text("Default Node");
+		if (p_ModelsContainer->GetScenePtr())
+		{
+			
+			if (ImGui::Checkbox("Hide all objects", &showHideAllobjects))
+			{
+				allobjects_showhide_callback(
+					[this](bool flag) { showHideAllObjects(flag); });
+				mObjectShowHideCallback(showHideAllobjects);
+				checkBoxes.clear();
+			}
+			int index = 0;
+			auto m_objects = p_ModelsContainer->GetScenePtr()->getObjects();
+			for (int obj_i = 0; obj_i < (int)m_objects.size(); obj_i++)
+			{
+				auto pGeomObj = std::dynamic_pointer_cast<fsi::GeometryObject>(m_objects.at(obj_i));
+				if (pGeomObj)
+				{
+					if (pGeomObj->m_shape)
+					{
+						CreateNodesList("Object", index);
+						index++;
+					}
+				}
+			}
+			for (int i = 0; i < index; i++)
+			{
+				if (checkBoxes.empty() || checkBoxes.size() < index)
+				{
+					checkBoxes.push_back(flag);
+				}
+			}
+		}
+		
 	}
 
 	if (ImGui::CollapsingHeader("Object Material"))
@@ -157,9 +188,50 @@ void GuiInterface::OnImGuiDrawWidget()
 	ImGui::PopStyleVar();
 }
 
-/*
+
+void GuiInterface::CreateNodesList(const char* prefix, int uid)
+{
+	//Get data from IfcReader
+
+	// Use object uid as identifier. Most commonly you could also use the object pointer as a base ID.
+	ImGui::PushID(uid);
+	ImGui::AlignTextToFramePadding();   // Text and Tree nodes are less high than framed widgets, here we add vertical spacing to make the tree lines equal high.
+	bool node_open = ImGui::TreeNode("Object", "%s_%u", prefix, uid);
+	ImGui::NextColumn();
+	ImGui::AlignTextToFramePadding();
+	//ImGui::Text("my sailor is rich");
+	ImGui::NextColumn();
+	
+
+	if (node_open)
+	{
+			{
+				// Here we use a TreeNode to highlight on hover (we could use e.g. Selectable as well)
+				ImGui::AlignTextToFramePadding();
+				ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet;
+				ImGui::TreeNodeEx("Object Layer", flags, "Field_%d", 0);
+				ImGui::NextColumn();
+				ImGui::SetNextItemWidth(-1);
+				
+				bool hide = checkBoxes.at(uid);
+				if(ImGui::Checkbox("Hide object", &hide))
+				{
+					single_object_showhide_callback(
+						[this](int uid, bool flag) { showHideObject(uid, flag); });
+					mSingleObjectShowHideCallback(uid, hide);
+				}
+				checkBoxes.at(uid) = hide;
+				ImGui::NextColumn();
+			}
+		ImGui::TreePop();
+	}
+	ImGui::PopID();
+}
+
+
 void GuiInterface::OnEvent(fsicore::Event& event)
 {
+	/*
 	if (event.GetEventType() == fsicore::EventType::KeyPressed)
 	{
 		fsicore::KeyPressedEvent& e = (fsicore::KeyPressedEvent&)event;
@@ -167,5 +239,8 @@ void GuiInterface::OnEvent(fsicore::Event& event)
 			FSI_TRACE("Tab key is pressed (event)!");
 		FSI_TRACE("{0}", (char)e.GetKeyCode());
 	}
+	*/
+	
+
+	
 }
-*/

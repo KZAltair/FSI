@@ -120,13 +120,14 @@ namespace fsicore {
 
 	void ImGuiLayer::OnImGuiRender()
 	{
-		//static bool show = true;
-		//ImGui::ShowDemoWindow(&show);
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
 		
 	}
 
 	void ImGuiLayer::OnEvent(Event& e)
 	{
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(FSI_BIND_EVENT_FN(ImGuiLayer::OnMouseScrolled));
 
@@ -140,7 +141,6 @@ namespace fsicore {
 
 	bool ImGuiLayer::OnMouseScrolled(MouseScrolledEvent& e)
 	{
-		FSI_CORE_INFO("ImGui scrolled Event was called!");
 		return false;
 	}
 

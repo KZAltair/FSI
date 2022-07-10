@@ -83,6 +83,7 @@
     <ClInclude Include="src\IfcReader\IfcReader.h" />
     <ClInclude Include="src\Core\MouseCodes.h" />
     <ClInclude Include="src\Core\OcctWindow\SceneContainer.h" />
+    <ClInclude Include="src\Core\Events\OcctEvents.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">

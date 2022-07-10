@@ -43,6 +43,10 @@ namespace fsicore {
 
 		virtual void* GetNativeWindow() const = 0;
 
+		//Controll events
+		virtual void SetOcctShowHideEvent(bool flag) = 0;
+		virtual void SetOcctShowHideSingleObjectEvent(bool flag) = 0;
+
 		static Window* Create(const WindowProps& props = WindowProps());
 	};
 

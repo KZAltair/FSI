@@ -23,11 +23,14 @@ namespace fsicore
 			m_objects.clear(); 
 			m_objects.resize(0);
 			removed = true; }
+		virtual void SetAisShapeID(int id) { aisShapeId = id; }
+		virtual int GetAisShapeID() const { return aisShapeId; }
 	private:
 		std::vector<TopoDS_Shape> m_shapes;
 		fsi::FSIScenePtr pScene;
 		std::vector<fsi::ObjectPtr> m_objects;
 		bool load = false;
 		bool removed = false;
+		int aisShapeId = 0;
 	};
 }

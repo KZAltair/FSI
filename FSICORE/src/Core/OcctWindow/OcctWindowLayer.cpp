@@ -133,7 +133,14 @@ namespace fsicore
         {
             mainView->Remove();
         }
-
+        t.Nullify();
+        aViewer.IsNull();
+        mainView.Nullify();
+        h_occtWindow.Nullify();
+        viewport.Nullify();
+        h_occtGLcontext.Nullify();
+        h_occtWindow.Nullify();
+        
         //TODO check window destruction
     }
 

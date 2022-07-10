@@ -156,6 +156,7 @@
     <ClInclude Include="src\Core\Events\Event.h" />
     <ClInclude Include="src\Core\Events\KeyEvent.h" />
     <ClInclude Include="src\Core\Events\MouseEvent.h" />
+    <ClInclude Include="src\Core\Events\OcctEvents.h" />
     <ClInclude Include="src\Core\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Core\Input.h" />
     <ClInclude Include="src\Core\KeyCodes.h" />

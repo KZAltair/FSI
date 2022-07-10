@@ -4,6 +4,7 @@
 #include "Core/Events/ApplicationEvent.h"
 #include "Core/Events/MouseEvent.h"
 #include "Core/Events/KeyEvent.h"
+#include "Core/Events/OcctEvents.h"
 
 #include <glad/glad.h>
 
@@ -29,6 +30,8 @@ namespace fsicore {
 	{
 		Shutdown();
 	}
+
+
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
@@ -169,5 +172,18 @@ namespace fsicore {
 	{
 		return m_Data.VSync;
 	}
+	void WindowsWindow::SetOcctShowHideEvent(bool flag)
+	{
+		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(m_Window);
 
+		OcctShowHideEvent event(flag);
+		data.EventCallback(event);
+	}
+	void WindowsWindow::SetOcctShowHideSingleObjectEvent(bool flag)
+	{
+		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(m_Window);
+
+		OcctShowHideSignleObjectEvent event(flag);
+		data.EventCallback(event);
+	}
 }
