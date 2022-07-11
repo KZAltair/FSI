@@ -112,8 +112,7 @@ namespace fsicore
         Handle(V3d_View) GetView() const { return mainView;  }
         Handle(V3d_Viewer) GetViewer() const { return aViewer; }
         Handle(OcctWindow) GetOcctWindow() const { return h_occtWindow; }
-        
-        unsigned int GetTexID() const;
+        Handle_OpenGl_Context GetOcctGLContext() const { return h_occtGLcontext; }
     protected:
         
     private:
@@ -122,11 +121,8 @@ namespace fsicore
         Handle(V3d_View) mainView;
         Handle(OcctWindow) h_occtWindow;
         Handle(Graphic3d_CView) viewport;
-        
         Handle_OpenGl_Context h_occtGLcontext;
         void* rawGlContext;
-        Handle(OpenGl_Texture) t;
-        Image_PixMap anImage;
         int occtWinWidth = 0;
         int occtWinHeight = 0;
 

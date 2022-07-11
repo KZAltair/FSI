@@ -2,13 +2,15 @@
 #include "PrimaryIncludes.h"
 #include <AIS_Shape.hxx>
 #include <AIS_InteractiveContext.hxx>
+#include <Image_PixMap.hxx>
+#include <OpenGl_Texture.hxx>
 
 class Occt : virtual public fsicore::OcctRenderLayer
 {
 public:
 	Occt();
 	void OnUpdate() override;
-
+	virtual void OnDetach() override;
 	virtual void OnImGuiRender() override;
 	virtual void OnImGuiDrawWidget() override;
 	void ProcessShape(Handle(AIS_InteractiveContext) h_aisInteractor);
@@ -16,6 +18,8 @@ public:
 	virtual void OnEvent(fsicore::Event& e) override;
 	bool OnMouseScrolled(fsicore::MouseScrolledEvent& e);
 	bool OnMouseMoveEvent(fsicore::MouseMovedEvent& e);
+	bool OnMousePressedEvent(fsicore::MouseButtonPressedEvent& e);
+	bool OnMouseReleasedEvent(fsicore::MouseButtonReleasedEvent& e);
 	bool OnObjectShowHide(fsicore::OcctShowHideEvent& e);
 	bool OnShowHideAllObjects(fsicore::OcctShowHideSignleObjectEvent& e);
 	void set_mesh_load_callback(const std::function<void(const std::string&)>& callback)
@@ -37,4 +41,7 @@ private:
 	std::function<void(const std::string&)> fsiLoadedMesh;
 
 	bool testShapesLoading = true;
+
+	Handle(OpenGl_Texture) t;
+	Image_PixMap anImage;
 };

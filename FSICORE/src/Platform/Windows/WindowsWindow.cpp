@@ -5,6 +5,7 @@
 #include "Core/Events/MouseEvent.h"
 #include "Core/Events/KeyEvent.h"
 #include "Core/Events/OcctEvents.h"
+#include <Aspect_VKeyFlags.hxx>
 
 #include <glad/glad.h>
 
@@ -20,7 +21,43 @@ namespace fsicore {
 	{
 		return new WindowsWindow(props);
 	}
+	namespace
+	{
+		//! Convert GLFW mouse button into Aspect_VKeyMouse.
+		static Aspect_VKeyMouse mouseButtonFromGlfw(int theButton)
+		{
+			switch (theButton)
+			{
+			case GLFW_MOUSE_BUTTON_LEFT:   return Aspect_VKeyMouse_LeftButton;
+			case GLFW_MOUSE_BUTTON_RIGHT:  return Aspect_VKeyMouse_RightButton;
+			case GLFW_MOUSE_BUTTON_MIDDLE: return Aspect_VKeyMouse_MiddleButton;
+			}
+			return Aspect_VKeyMouse_NONE;
+		}
 
+		//! Convert GLFW key modifiers into Aspect_VKeyFlags.
+		static Aspect_VKeyFlags keyFlagsFromGlfw(int theFlags)
+		{
+			Aspect_VKeyFlags aFlags = Aspect_VKeyFlags_NONE;
+			if ((theFlags & GLFW_MOD_SHIFT) != 0)
+			{
+				aFlags |= Aspect_VKeyFlags_SHIFT;
+			}
+			if ((theFlags & GLFW_MOD_CONTROL) != 0)
+			{
+				aFlags |= Aspect_VKeyFlags_CTRL;
+			}
+			if ((theFlags & GLFW_MOD_ALT) != 0)
+			{
+				aFlags |= Aspect_VKeyFlags_ALT;
+			}
+			if ((theFlags & GLFW_MOD_SUPER) != 0)
+			{
+				aFlags |= Aspect_VKeyFlags_META;
+			}
+			return aFlags;
+		}
+	}
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
 		Init(props);
@@ -117,13 +154,13 @@ namespace fsicore {
 				{
 				case GLFW_PRESS:
 				{
-					MouseButtonPressedEvent event(button);
+					MouseButtonPressedEvent event(button, mods);
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					MouseButtonReleasedEvent event(button);
+					MouseButtonReleasedEvent event(button, mods);
 					data.EventCallback(event);
 					break;
 				}

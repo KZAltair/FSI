@@ -7,6 +7,7 @@ class GuiInterface : public fsicore::Layer
 {
 public:
 	GuiInterface();
+	virtual ~GuiInterface();
 	void OnUpdate() override;
 	virtual void OnImGuiRender() override;
 	virtual void OnImGuiDrawWidget() override;
@@ -41,6 +42,7 @@ public:
 	}
 	//This layer GUI functions
 	void CreateNodesList(const char* prefix, int uid);
+	void ClearNodeList();
 	// create a file browser instance
 private:
 	fsicore::Application* app;

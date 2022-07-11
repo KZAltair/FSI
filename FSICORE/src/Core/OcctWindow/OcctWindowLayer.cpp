@@ -119,45 +119,47 @@ namespace fsicore
         //mainView->ChangeRenderingParams().ToShowStats = true;
         h_occtGLcontext = new OpenGl_Context();
         h_occtGLcontext->Init((HWND)(mainView->Window()->NativeHandle()), ::GetDC((HWND)(mainView->Window()->NativeHandle())), rawGlContext);
-        //h_occtGLcontext->ResizeViewport(size);
+        
+        // View settings.
+        mainView->SetShadingModel(V3d_PHONG);
+
+        // Configure rendering parameters
+        Graphic3d_RenderingParams& RenderParams = mainView->ChangeRenderingParams();
+        RenderParams.IsAntialiasingEnabled = true;
+        RenderParams.NbMsaaSamples = 4; // Anti-aliasing by multi-sampling
+        RenderParams.IsShadowEnabled = false;
+        RenderParams.CollectedStats = Graphic3d_RenderingParams::PerfCounters_All;
 
     }
 
     void OcctRenderLayer::OnDetach()
     {
-        if (!t.IsNull())
-        {
-            t->Release(h_occtGLcontext.get());
-        }
         if (!mainView.IsNull())
         {
             mainView->Remove();
         }
-        t.Nullify();
-        aViewer.IsNull();
-        mainView.Nullify();
-        h_occtWindow.Nullify();
-        viewport.Nullify();
-        h_occtGLcontext.Nullify();
-        h_occtWindow.Nullify();
+        if (!h_occtWindow.IsNull())
+        {
+            h_occtWindow.Nullify();
+        }
         
         //TODO check window destruction
     }
 
     void OcctRenderLayer::OnOcctWindowRender()
     {
-        if (!t.IsNull())
-        {
-            t->Release(h_occtGLcontext.get());
-        }
-        t = new OpenGl_Texture();
-        OpenGl_TextureFormat p = OpenGl_TextureFormat::FindSizedFormat(h_occtGLcontext, GL_RGBA8);
-        if (!mainView->ToPixMap(anImage, occtWinWidth, occtWinHeight))
-        {
-            FSI_CORE_ERROR("View dump failed");
-        }
+        //if (!t.IsNull())
+        //{
+            //t->Release(h_occtGLcontext.get());
+        //}
+        //t = new OpenGl_Texture();
+        //OpenGl_TextureFormat p = OpenGl_TextureFormat::FindSizedFormat(h_occtGLcontext, GL_RGBA8);
+        //if (!mainView->ToPixMap(anImage, occtWinWidth, occtWinHeight))
+        //{
+            //FSI_CORE_ERROR("View dump failed");
+        //}
         //t->Init(m_GLcontext, p, Graphic3d_Vec2i(w, h), Graphic3d_TypeOfTexture::Graphic3d_TypeOfTexture_2D, &anImage);
-        t->Init(h_occtGLcontext, anImage, Graphic3d_TypeOfTexture_2D, true);
+        //t->Init(h_occtGLcontext, anImage, Graphic3d_TypeOfTexture_2D, true);
         //mainView->Invalidate();
         //FlushViewEvents(h_aisInteractor, mainView, true);
     }
@@ -180,17 +182,13 @@ namespace fsicore
             && size[1] != 0
             && !mainView.IsNull())
         {
-            //h_occtGLcontext->ResizeViewport(size);
             mainView->Window()->DoResize();
             mainView->MustBeResized();
             mainView->Invalidate();
+            //h_occtGLcontext->ResizeViewport(size);
             mainView->Redraw();
         }
         return false;
-    }
-    unsigned int OcctRenderLayer::GetTexID() const
-    {
-        return t->TextureId();
     }
 }
 

@@ -52,19 +52,21 @@ namespace fsicore {
 	{
 	public:
 		inline int GetMouseButton() const { return m_Button; }
+		inline int GetMouseFalgs() const { return m_Flags; }
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:
-		MouseButtonEvent(int button)
-			: m_Button(button) {}
+		MouseButtonEvent(int button, int flags)
+			: m_Button(button), m_Flags(flags) {}
 
 		int m_Button;
+		int m_Flags;
 	};
 
 	class FSI_API MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(int button)
-			: MouseButtonEvent(button) {}
+		MouseButtonPressedEvent(int button, int flags)
+			: MouseButtonEvent(button, flags) {}
 
 		std::string ToString() const override
 		{
@@ -79,8 +81,8 @@ namespace fsicore {
 	class FSI_API MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(int button)
-			: MouseButtonEvent(button) {}
+		MouseButtonReleasedEvent(int button, int flags)
+			: MouseButtonEvent(button, flags) {}
 
 		std::string ToString() const override
 		{

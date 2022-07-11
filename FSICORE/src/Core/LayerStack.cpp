@@ -10,12 +10,16 @@ namespace fsicore {
 
 	LayerStack::~LayerStack()
 	{
-		for (Layer* layer : m_Layers)
+		//for (Layer* layer : m_Layers)
+		//{
+			//layer->OnDetach();
+			//delete layer;
+		//}
+		for (int i = (int)m_Layers.size()-1; i >= 0; --i)
 		{
-			layer->OnDetach();
-			delete layer;
+			m_Layers.at(i)->OnDetach();
+			delete m_Layers.at(i);
 		}
-
 	}
 
 	void LayerStack::PushLayer(Layer* layer)

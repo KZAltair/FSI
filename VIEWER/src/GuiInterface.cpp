@@ -14,12 +14,17 @@ GuiInterface::GuiInterface()
 
 }
 
+GuiInterface::~GuiInterface()
+{
+}
+
 void GuiInterface::OnUpdate()
 {
 	if (fsicore::Input::IsKeyPressed(FSI_KEY_TAB))
 		FSI_TRACE("Tab key is pressed (poll)!");
 
 }
+
 void GuiInterface::OnImGuiRender()
 {
 	
@@ -87,6 +92,7 @@ void GuiInterface::OnImGuiRender()
 	}
 	if (ImGui::Button("Reset"))
 	{
+		ClearNodeList();
 		p_ModelsContainer->ClearAllObjects();
 	}
 	if (ImGui::CollapsingHeader("Object Nodes", ImGuiTreeNodeFlags_DefaultOpen))
@@ -226,6 +232,32 @@ void GuiInterface::CreateNodesList(const char* prefix, int uid)
 		ImGui::TreePop();
 	}
 	ImGui::PopID();
+}
+
+void GuiInterface::ClearNodeList()
+{
+	
+	if (p_ModelsContainer->GetScenePtr())
+	{
+		int index = 0;
+		auto m_objects = p_ModelsContainer->GetScenePtr()->getObjects();
+		for (int obj_i = 0; obj_i < (int)m_objects.size(); obj_i++)
+		{
+			auto pGeomObj = std::dynamic_pointer_cast<fsi::GeometryObject>(m_objects.at(obj_i));
+			if (pGeomObj)
+			{
+				if (pGeomObj->m_shape)
+				{
+					//CreateNodesList("Object", index);
+					std::string s = "Object_" + std::to_string(index);
+					ImGuiID id = ImGui::GetID(s.c_str());
+					index++;
+				}
+			}
+		}
+		checkBoxes.clear();
+	}
+	
 }
 
 
