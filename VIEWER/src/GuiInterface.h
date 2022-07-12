@@ -55,6 +55,7 @@ public:
 
 	//This layer GUI functions
 	void CreateNode(const char* prefix, int uid);
+	void DrawPropertyPannel();
 	// create a file browser instance
 private:
 	fsicore::Application* app;
@@ -73,4 +74,8 @@ private:
 	std::vector<bool> checkBoxes;
 	bool flag = false;
 	bool showHideAllobjects = false;
+	int mSelectionContext = -1;
+	int mDefaultFloodId = 0;
+	std::string label;
+	std::vector<std::string> lables;
 };

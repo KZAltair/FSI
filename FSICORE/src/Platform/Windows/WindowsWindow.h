@@ -25,6 +25,7 @@ namespace fsicore
 		virtual void SetOcctShowHideSingleObjectEvent(bool flag) override;
 		virtual void SetOcctEmptyScene(bool flag) override;
 		virtual void SetOcctLoadScene(bool flag) override;
+		virtual void SetWindowClosed() override;
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();

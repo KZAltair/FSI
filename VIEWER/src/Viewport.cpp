@@ -180,6 +180,7 @@ void Occt::OnImGuiRender()
 	m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 	
 
+	VieportPos.SetValues((int)viewportMinRegion.x, (int)viewportMinRegion.y);
 	if (!t.IsNull())
 	{
 		t->Release(occtLayer->GetOcctGLContext().get());

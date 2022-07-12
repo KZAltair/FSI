@@ -32,6 +32,7 @@ public:
 private:
 	fsicore::Application* app;
 	Graphic3d_Vec2i pos;
+	Graphic3d_Vec2i VieportPos;
 	Handle(AIS_InteractiveContext) h_aisInteractor;
 	std::vector<Handle(AIS_Shape)> shHandle;
 	fsicore::OcctRenderLayer* occtLayer;

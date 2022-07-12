@@ -48,6 +48,7 @@ namespace fsicore {
 		virtual void SetOcctShowHideSingleObjectEvent(bool flag) = 0;
 		virtual void SetOcctEmptyScene(bool flag) = 0;
 		virtual void SetOcctLoadScene(bool flag) = 0;
+		virtual void SetWindowClosed() = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};

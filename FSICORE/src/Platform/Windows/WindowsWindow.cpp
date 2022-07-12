@@ -237,4 +237,10 @@ namespace fsicore {
 		OcctLoadSceneEvent event(flag);
 		data.EventCallback(event);
 	}
+	void WindowsWindow::SetWindowClosed()
+	{
+		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(m_Window);
+		WindowCloseEvent event;
+		data.EventCallback(event);
+	}
 }

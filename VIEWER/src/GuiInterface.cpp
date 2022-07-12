@@ -35,6 +35,7 @@ void GuiInterface::OnImGuiRender()
 			
 				if (p_ModelsContainer->GetScenePtr())
 				{
+					mSelectionContext = -1;
 					p_ModelsContainer->ClearAllObjects();
 				}
 
@@ -49,7 +50,10 @@ void GuiInterface::OnImGuiRender()
 			}
 			if (ImGui::MenuItem("Save", "CTRL+S")) {}
 			if (ImGui::MenuItem("Save as...", "CTRL+ALT+S", false, false)) {}  // Disabled item
-			if (ImGui::MenuItem("Exit", "CTRL+E")) {}
+			if (ImGui::MenuItem("Exit", "CTRL+E")) {
+				
+				app->GetWindow().SetWindowClosed();
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Edit"))
@@ -80,7 +84,7 @@ void GuiInterface::OnImGuiRender()
 		mFileDialog.Open();
 	}
 	*/
-	
+
 	if (mFileDialog.HasSelected())
 	{
 		auto file_path = mFileDialog.GetSelected().string();
@@ -96,11 +100,48 @@ void GuiInterface::OnImGuiRender()
 	}
 	if (ImGui::Button("Reset"))
 	{
+		mSelectionContext = -1;
 		occt_empty_scene_callback(
 			[this](bool flag) { occtEmptyScene(flag); });
 		fEmptySceneCallback(true);
 
 		p_ModelsContainer->ClearAllObjects();
+	}
+	ImGui::Text("Select floors");
+	if (ImGui::TreeNodeEx((void*)typeid(int).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Floors Filter"))
+	{
+		if (p_ModelsContainer->GetScenePtr())
+		{
+			int index = 0;
+			auto m_objects = p_ModelsContainer->GetScenePtr()->getObjects();
+			for (int obj_i = 0; obj_i < (int)m_objects.size(); obj_i++)
+			{
+				auto floor = std::dynamic_pointer_cast<fsi::BuildingStorey>(m_objects.at(obj_i));
+				if (floor)
+				{
+				
+					label = "Floor_" + std::to_string(index);
+					lables.push_back(label);
+					//CreateNodesList("Object", index);
+					//CreateNode("Object", index);
+					index++;
+				}
+			}
+			const char* currentSelection = lables.at(0).c_str();
+			if (ImGui::BeginCombo("F", currentSelection))
+			{
+				for (int i = 0; i < index; i++)
+				{
+					bool isSelected = currentSelection == lables.at(i).c_str();
+					if (ImGui::Selectable(lables.at(i).c_str(), isSelected))
+					{
+						currentSelection = lables.at(i).c_str();
+					}
+				}
+				ImGui::EndCombo();
+			}
+		}
+		ImGui::TreePop();
 	}
 	if (ImGui::CollapsingHeader("Object Nodes", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -139,21 +180,13 @@ void GuiInterface::OnImGuiRender()
 		}
 		
 	}
+	ImGui::End();
 
-	if (ImGui::CollapsingHeader("Object Material"))
+	//Floor contents
+	ImGui::Begin("Floor property");
+	if (mSelectionContext >= 0)
 	{
-		//ImGui::ColorPicker3("Color", (float*)&mesh->mColor, ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_DisplayRGB);
-		//ImGui::SliderFloat("Roughness", &mesh->mRoughness, 0.0f, 1.0f);
-		//ImGui::SliderFloat("Metallic", &mesh->mMetallic, 0.0f, 1.0f);
-	}
-
-	if (ImGui::CollapsingHeader("Scene Light"))
-	{
-
-		ImGui::Separator();
-		ImGui::Text("Position");
-		ImGui::Separator();
-		OnImGuiDrawWidget();
+		DrawPropertyPannel();
 	}
 	ImGui::End();
 }
@@ -205,11 +238,20 @@ void GuiInterface::OnImGuiDrawWidget()
 
 void GuiInterface::CreateNode(const char* prefix, int uid)
 {
+	
+	ImGuiTreeNodeFlags flags = ((mSelectionContext == uid) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 
-	bool node_open = ImGui::TreeNode("Object", "%s_%u", prefix, uid);
+	//bool node_open = ImGui::TreeNode("Object", "%s_%u", prefix, uid);
 
+	bool node_open = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)uid, flags, "Object_%u", uid);
+	if (ImGui::IsItemClicked())
+	{
+		mSelectionContext = uid;
+		
+	}
 	if (node_open)
 	{
+		/*
 			{
 				ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet;
 				ImGui::TreeNodeEx("Object Layer", flags, "Field_%d", 0);
@@ -223,8 +265,21 @@ void GuiInterface::CreateNode(const char* prefix, int uid)
 				}
 				checkBoxes.at(uid) = hide;
 			}
+			*/
 		ImGui::TreePop();
 	}
+}
+
+void GuiInterface::DrawPropertyPannel()
+{
+	bool hide = checkBoxes.at(mSelectionContext);
+	if (ImGui::Checkbox("Hide object", &hide))
+	{
+		single_object_showhide_callback(
+			[this](int uid, bool flag) { showHideObject(uid, flag); });
+		mSingleObjectShowHideCallback(mSelectionContext, hide);
+	}
+	checkBoxes.at(mSelectionContext) = hide;
 }
 
 
