@@ -100,13 +100,13 @@
       <PrecompiledHeaderFile>fsipch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FSI_PLATFORM_WINDOWS;FSI_BUILD_DLL;GLFW_INCLUDE_NONE;FSI_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;3rdparty\spdlog\include;3rdparty\GLFW\include;3rdparty\Glad\include;3rdparty\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Work\deps\IfcOpenShell-install;D:\Work\fsi_sdk\fsi_sdk\include;D:\Work\FSIProject\FSICORE\3rdparty;D:\Work\deps\boost_1_74_0\include\boost-1_74;D:\Work\OCCT76REpo-install\release\inc;src;3rdparty\spdlog\include;3rdparty\GLFW\include;3rdparty\Glad\include;3rdparty\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>

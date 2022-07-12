@@ -22,12 +22,15 @@ public:
 	bool OnMouseReleasedEvent(fsicore::MouseButtonReleasedEvent& e);
 	bool OnObjectShowHide(fsicore::OcctShowHideEvent& e);
 	bool OnShowHideAllObjects(fsicore::OcctShowHideSignleObjectEvent& e);
+	bool OnEmptyScene(fsicore::OcctEmptySceneEvent& e);
+	bool OnLoadScene(fsicore::OcctLoadSceneEvent& e);
 	void set_mesh_load_callback(const std::function<void(const std::string&)>& callback)
 	{
 		fsiLoadedMesh = callback;
 	}
 
 private:
+	fsicore::Application* app;
 	Graphic3d_Vec2i pos;
 	Handle(AIS_InteractiveContext) h_aisInteractor;
 	std::vector<Handle(AIS_Shape)> shHandle;

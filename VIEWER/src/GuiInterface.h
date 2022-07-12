@@ -19,6 +19,7 @@ public:
 	void load(const std::string& filepath)
 	{
 		p_ModelsContainer->LoadShapes(filepath);
+		app->GetWindow().SetOcctLoadScene(true);
 	}
 
 	void allobjects_showhide_callback(const std::function<void(bool)>& callback)
@@ -40,9 +41,20 @@ public:
 		app->GetWindow().SetOcctShowHideEvent(flag);
 		p_ModelsContainer->SetAisShapeID(id);
 	}
+
+	//Empty scene callback
+	void occt_empty_scene_callback(const std::function<void(bool)>& callback)
+	{
+		fEmptySceneCallback = callback;
+	}
+
+	void occtEmptyScene(bool flag)
+	{
+		app->GetWindow().SetOcctEmptyScene(flag);
+	}
+
 	//This layer GUI functions
-	void CreateNodesList(const char* prefix, int uid);
-	void ClearNodeList();
+	void CreateNode(const char* prefix, int uid);
 	// create a file browser instance
 private:
 	fsicore::Application* app;
@@ -51,6 +63,7 @@ private:
 	std::function<void(const std::string&)> mMeshLoadCallback;
 	std::function<void(bool)> mObjectShowHideCallback;
 	std::function<void(int, bool)> mSingleObjectShowHideCallback;
+	std::function<void(bool)> fEmptySceneCallback;
 	std::string mCurrentFile;
 	
 	std::vector<TopoDS_Shape> m_shapes; //!< Shapes to visualize.

@@ -11,7 +11,6 @@ GuiInterface::GuiInterface()
 	app = &fsicore::Application::Get();
 	occtLayer = app->GetOcctLayer();
 	p_ModelsContainer = app->GetSceneContainer();
-
 }
 
 GuiInterface::~GuiInterface()
@@ -34,6 +33,11 @@ void GuiInterface::OnImGuiRender()
 		{
 			if (ImGui::MenuItem("Open", "CTRL+O")) {
 			
+				if (p_ModelsContainer->GetScenePtr())
+				{
+					p_ModelsContainer->ClearAllObjects();
+				}
+
 				mCurrentFile = "< ... >";
 
 				mFileDialog.SetTitle("Open ifc project");
@@ -92,7 +96,10 @@ void GuiInterface::OnImGuiRender()
 	}
 	if (ImGui::Button("Reset"))
 	{
-		ClearNodeList();
+		occt_empty_scene_callback(
+			[this](bool flag) { occtEmptyScene(flag); });
+		fEmptySceneCallback(true);
+
 		p_ModelsContainer->ClearAllObjects();
 	}
 	if (ImGui::CollapsingHeader("Object Nodes", ImGuiTreeNodeFlags_DefaultOpen))
@@ -116,7 +123,8 @@ void GuiInterface::OnImGuiRender()
 				{
 					if (pGeomObj->m_shape)
 					{
-						CreateNodesList("Object", index);
+						//CreateNodesList("Object", index);
+						CreateNode("Object", index);
 						index++;
 					}
 				}
@@ -195,29 +203,16 @@ void GuiInterface::OnImGuiDrawWidget()
 }
 
 
-void GuiInterface::CreateNodesList(const char* prefix, int uid)
+void GuiInterface::CreateNode(const char* prefix, int uid)
 {
-	//Get data from IfcReader
 
-	// Use object uid as identifier. Most commonly you could also use the object pointer as a base ID.
-	ImGui::PushID(uid);
-	ImGui::AlignTextToFramePadding();   // Text and Tree nodes are less high than framed widgets, here we add vertical spacing to make the tree lines equal high.
 	bool node_open = ImGui::TreeNode("Object", "%s_%u", prefix, uid);
-	ImGui::NextColumn();
-	ImGui::AlignTextToFramePadding();
-	//ImGui::Text("my sailor is rich");
-	ImGui::NextColumn();
-	
 
 	if (node_open)
 	{
 			{
-				// Here we use a TreeNode to highlight on hover (we could use e.g. Selectable as well)
-				ImGui::AlignTextToFramePadding();
 				ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet;
 				ImGui::TreeNodeEx("Object Layer", flags, "Field_%d", 0);
-				ImGui::NextColumn();
-				ImGui::SetNextItemWidth(-1);
 				
 				bool hide = checkBoxes.at(uid);
 				if(ImGui::Checkbox("Hide object", &hide))
@@ -227,37 +222,9 @@ void GuiInterface::CreateNodesList(const char* prefix, int uid)
 					mSingleObjectShowHideCallback(uid, hide);
 				}
 				checkBoxes.at(uid) = hide;
-				ImGui::NextColumn();
 			}
 		ImGui::TreePop();
 	}
-	ImGui::PopID();
-}
-
-void GuiInterface::ClearNodeList()
-{
-	
-	if (p_ModelsContainer->GetScenePtr())
-	{
-		int index = 0;
-		auto m_objects = p_ModelsContainer->GetScenePtr()->getObjects();
-		for (int obj_i = 0; obj_i < (int)m_objects.size(); obj_i++)
-		{
-			auto pGeomObj = std::dynamic_pointer_cast<fsi::GeometryObject>(m_objects.at(obj_i));
-			if (pGeomObj)
-			{
-				if (pGeomObj->m_shape)
-				{
-					//CreateNodesList("Object", index);
-					std::string s = "Object_" + std::to_string(index);
-					ImGuiID id = ImGui::GetID(s.c_str());
-					index++;
-				}
-			}
-		}
-		checkBoxes.clear();
-	}
-	
 }
 
 

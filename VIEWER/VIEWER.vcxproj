@@ -97,14 +97,14 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FSI_PLATFORM_WINDOWS;FSI_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\FSICORE\3rdparty\spdlog\include;..\FSICORE\src;..\FSICORE\3rdparty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Work\deps\IfcOpenShell-install\include;D:\Work\deps\boost_1_74_0\include\boost-1_74;D:\Work\fsi_sdk\fsi_sdk\include;D:\Work\OCCT76REpo-install\release\inc;D:\Work\FSIProject\FSICORE\3rdparty;..\FSICORE\3rdparty\spdlog\include;..\FSICORE\src;..\FSICORE\3rdparty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -112,6 +112,8 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>D:\Work\deps\IfcOpenShell-install\lib;D:\Work\deps\boost_1_74_0\lib;D:\Work\OCCT76REpo-install\release\win64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;IfcGeom.lib;IfcParse.lib;IfcGeom_ifc2x3.lib;IfcGeom_ifc4.lib;IfcGeom_ifc4x1.lib;IfcGeom_ifc4x2.lib;IfcGeom_ifc4x3_rc1.lib;IfcGeom_ifc4x3_rc2.lib;IfcGeom_ifc4x3_rc3.lib;IfcGeom_ifc4x3_rc4.lib;bcrypt.lib;TKernel.lib;TKMath.lib;TKG2d.lib;TKG3d.lib;TKGeomBase.lib;TKBRep.lib;TKGeomAlgo.lib;TKTopAlgo.lib;TKPrim.lib;TKBO.lib;TKShHealing.lib;TKBool.lib;TKHLR.lib;TKFillet.lib;TKOffset.lib;TKFeat.lib;TKMesh.lib;TKXMesh.lib;TKService.lib;TKV3d.lib;TKOpenGl.lib;TKMeshVS.lib;TKCDF.lib;TKLCAF.lib;TKCAF.lib;TKBinL.lib;TKXmlL.lib;TKBin.lib;TKXml.lib;TKStdL.lib;TKStd.lib;TKTObj.lib;TKBinTObj.lib;TKXmlTObj.lib;TKVCAF.lib;TKXSBase.lib;TKSTEPBase.lib;TKSTEPAttr.lib;TKSTEP209.lib;TKSTEP.lib;TKIGES.lib;TKXCAF.lib;TKXDEIGES.lib;TKXDESTEP.lib;TKSTL.lib;TKVRML.lib;TKXmlXCAF.lib;TKBinXCAF.lib;TKRWMesh.lib;TKDraw.lib;TKTopTest.lib;TKOpenGlTest.lib;TKViewerTest.lib;TKXSDRAW.lib;TKDCAF.lib;TKXDEDRAW.lib;TKTObjDRAW.lib;TKQADraw.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">

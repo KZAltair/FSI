@@ -23,6 +23,8 @@ namespace fsicore
 		inline virtual void* GetNativeWindow() const override { return m_Window; }
 		virtual void SetOcctShowHideEvent(bool flag) override;
 		virtual void SetOcctShowHideSingleObjectEvent(bool flag) override;
+		virtual void SetOcctEmptyScene(bool flag) override;
+		virtual void SetOcctLoadScene(bool flag) override;
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();

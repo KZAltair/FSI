@@ -223,4 +223,18 @@ namespace fsicore {
 		OcctShowHideSignleObjectEvent event(flag);
 		data.EventCallback(event);
 	}
+	void WindowsWindow::SetOcctEmptyScene(bool flag)
+	{
+		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(m_Window);
+
+		OcctEmptySceneEvent event(flag);
+		data.EventCallback(event);
+	}
+	void WindowsWindow::SetOcctLoadScene(bool flag)
+	{
+		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(m_Window);
+
+		OcctLoadSceneEvent event(flag);
+		data.EventCallback(event);
+	}
 }

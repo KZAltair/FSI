@@ -16,7 +16,6 @@ namespace fsicore
 		}
 		if (pScene)
 		{
-			load = true;
 			return pScene->getObjects();
 		}
 		return std::vector<fsi::ObjectPtr>();

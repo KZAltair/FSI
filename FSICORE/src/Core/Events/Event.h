@@ -17,7 +17,7 @@ namespace fsicore {
 		AppTick, AppUpdate, AppRender,
 		KeyPressed, KeyReleased, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
-		AllObjectShowHide, SingleObjectShowHide
+		AllObjectShowHide, SingleObjectShowHide, EmptyScene, LoadScene
 	};
 
 	enum EventCategory
